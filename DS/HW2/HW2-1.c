@@ -33,7 +33,7 @@ int topy(stack *s){
 }
 
 int size(stack *s){
-  return s -> index - 1;
+  return s -> index;
 }
 
 signed main(){
@@ -61,6 +61,7 @@ signed main(){
   int num = strlen(path);
   stack s;
   init(&s);
+  push(&s, startx, starty);
   for(int i = 0; i < num; i++){
     int nextx = startx, nexty = starty;
     if(path[i] == 'w' || path[i] == 'W') nextx = startx - 1;
@@ -68,7 +69,7 @@ signed main(){
     if(path[i] == 's' || path[i] == 'S') nextx = startx + 1;
     if(path[i] == 'd' || path[i] == 'D') nexty = starty + 1;
     if(path[i] == 'b' || path[i] == 'B'){
-      if(size(s) == 0) continue;
+      if(size(&s) == 0) continue;
       startx = topx(&s);
       starty = topy(&s);
       pop(&s);
@@ -88,5 +89,6 @@ signed main(){
     startx = nextx;
     starty = nexty;
   }
+  printf("Game over. You collided with the obstacle!\n");
   return 0;
 }
