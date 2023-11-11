@@ -52,8 +52,8 @@ void insert(node **root, char *name, double distance){
 
 void dfs(node *root){
   if(!root) return;
-  dfs(root -> left);
   printf("%s\n", root -> name);
+  dfs(root -> left);
   dfs(root -> right);
 }
 
