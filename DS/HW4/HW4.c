@@ -23,6 +23,7 @@ double haversine(double lat1, double lon1, double lat2, double lon2)
   return rad * c;
 }
 
+// tree node
 struct node{
   double distance;
   char *name;
@@ -30,6 +31,8 @@ struct node{
   struct node *right;
 }typedef node;
 
+
+// bst insert 
 void insert(node **root, char *name, double distance){
   node *n = (node*)malloc(sizeof(node));
   n -> name = name;
@@ -50,6 +53,8 @@ void insert(node **root, char *name, double distance){
   else save -> right = n;
 }
 
+
+// dfs preorder traversal
 void dfs(node *root){
   if(!root) return;
   printf("%s\n", root -> name);
@@ -57,22 +62,30 @@ void dfs(node *root){
   dfs(root -> right);
 }
 
+
+// make a queue to bfs
 struct queue{
   node *save[100000];
   int start;
   int end;
 }typedef queue;
 
+
+// init queue
 void init(queue *q){
   q -> start = 0;
   q -> end = -1;
 } 
 
+
+// push data to queue
 void push(queue *q, node *n){
   q -> end++;
   q -> save[q -> end] = n;
 }
 
+
+// find minimun node in bst and printf data on path
 node *minimun(node *root){
   if(!root) return NULL;
   printf("%s\n", root -> name);
@@ -80,12 +93,15 @@ node *minimun(node *root){
   return root;
 }
 
+// pop data from queue
 node* pop(queue *q){
   if(q -> end < q -> start) return NULL;
   q -> start++;
   return q -> save[q -> start - 1];
 }
 
+
+// return queuesize
 int qsize(queue *q){
   return q -> end - q -> start + 1;
 }
@@ -118,15 +134,11 @@ signed main(){
     if(t -> right) push(q, t -> right);
   }
   printf("\n");
+
   printf("Path from Root to Minimum Node:\n");
   node *save = minimun(root);
-  // printf("%s\n", root -> left -> name);
-  // while(root != NULL){
-  //   save = root;
-  //   printf("%s\n", root -> name);
-  //   root = root -> left;
-  // }
   printf("\n");
+  
   printf("Nearest Treasure Found:\n");
   printf("%s(Distance:%.1f)\n", save -> name, save -> distance);
   return 0;
