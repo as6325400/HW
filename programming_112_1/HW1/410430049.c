@@ -77,16 +77,26 @@ bool changeMap(char **map, int row, int column, int mode){
         pj = j;
         break;
       }
+      if(map[i][j] == 'p'){
+        pi = i;
+        pj = j;
+        break;
+      }
     }
   }
 
   newi = pi + direci[mode];
   newj = pj + direcj[mode];
   if(newi >= row || newi < 0 || newj >= column || newj < 0) return false;
-  if(map[newi][newj] == ' ' || map[newi][newj] == 'o'){
+  if(map[newi][newj] == ' ' || map[newi][newj] == 'o' || map[newi][newj] == 'D'){
+    char origin = map[pi][pj];
     if(map[newi][newj] == ' '){
       map[newi][newj] = 'P';
       map[pi][pj] = ' ';
+    }
+    else if(map[newi][newj] == 'D'){
+      map[pi][pj] = ' ';
+      map[newi][newj] = 'p';
     }
     else{
       int newBoxi = newi + direci[mode], newBoxj = newj + direcj[mode];
@@ -102,6 +112,7 @@ bool changeMap(char **map, int row, int column, int mode){
       }
       else return false;
     }
+    if(origin == 'p') map[pi][pj] = 'D';
   }
   else true;
 }
@@ -189,7 +200,10 @@ int main(){
     }
 
     winGame();
-    if(replay()) continue;
+    if(replay()){
+      clearTerminal();
+      continue;
+    }
     else break;
   }
 }
