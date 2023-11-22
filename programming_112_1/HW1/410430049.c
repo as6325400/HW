@@ -4,12 +4,15 @@
 #include<string.h>
 #include <conio.h>
 
+// 要讀地圖的名稱
 char name[20];
 
+// 清空畫面
 void clearTerminal(){
   system("cls");
 }
 
+// 一開始的畫面
 void DisplayMenu(){
   printf("****Welcome to Sokoban Game****\n");
   printf("You can move the character up, down, left, and right through the direction keys\n");
@@ -19,6 +22,8 @@ void DisplayMenu(){
   clearTerminal();
 }
 
+
+// 沒找到地圖的狀況
 void DisplayNoSuchFile(){
   clearTerminal();
   printf("No such level found\n");
@@ -26,11 +31,13 @@ void DisplayNoSuchFile(){
   _getch();
 }
 
+// 顯示選擇地圖
 void displaySelectUI(){
   clearTerminal();
   printf("Select a play level:");
 }
 
+// 地圖讀檔
 char **readGraph(char name[], int *row, int *column){
   char filename[20] = "map";
   strcat(filename, name);
@@ -65,6 +72,7 @@ char **readGraph(char name[], int *row, int *column){
 }
 
 // up 0, left 1, right 2, down 3
+// 更改地圖 人移動
 bool changeMap(char **map, int row, int column, int mode){
   int direci[4] = {-1, 0, 0, 1};
   int direcj[4] = {0, -1, 1, 0};
@@ -117,6 +125,8 @@ bool changeMap(char **map, int row, int column, int mode){
   else true;
 }
 
+
+// 洗成新地圖 給按Ｒ作用的
 bool newMap(char **map, int *row, int *column){
   char **newmap = readGraph(name, row, column);
   for(int i = 0; i < *row; i++){
@@ -127,6 +137,8 @@ bool newMap(char **map, int *row, int *column){
   return true;
 }
 
+
+// 顯示操作完的結果
 void displayMap(char **map, int row, int column, int end){
   clearTerminal();
   printf("Use the arrow keys to control the character\n");
@@ -160,10 +172,12 @@ bool judgeGame(char **map, int row, int column){
   return true;
 }
 
+// 顯示勝利
 void winGame(){
   printf("Congratulations on passing the level~\n");
 }
 
+// 顯示是否繼續玩
 bool replay(){
   while(1){
     printf("Do you want to continue playing?(Y/n)");
@@ -174,6 +188,7 @@ bool replay(){
   }
   return false;
 }
+
 
 int main(){
   while(1){
