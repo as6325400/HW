@@ -7,7 +7,7 @@
 char name[20];
 
 void clearTerminal(){
-  printf("\x1B[2J\x1B[H");
+  system("cls");
 }
 
 void DisplayMenu(){
@@ -127,7 +127,7 @@ bool newMap(char **map, int *row, int *column){
   return true;
 }
 
-void displayMap(char **map, int row, int column){
+void displayMap(char **map, int row, int column, int end){
   clearTerminal();
   printf("Use the arrow keys to control the character\n");
   printf("Use the R button to restart this game\n");
@@ -139,6 +139,9 @@ void displayMap(char **map, int row, int column){
     }
     printf("\n");
   }
+
+  if(end == 1) return;
+
   char direction = _getch();
 
   if(direction == 72) changeMap(map, row, column, 0);
@@ -196,9 +199,9 @@ int main(){
     }
 
     while(!judgeGame(map, row, column)){
-      displayMap(map, row, column);
+      displayMap(map, row, column, 0);
     }
-
+    displayMap(map, row, column, 1);
     winGame();
     if(replay()){
       clearTerminal();
