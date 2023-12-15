@@ -21,6 +21,7 @@ char *rowAns(){
   }
   char *strans = malloc(sizeof(char) * 1005);
   sprintf(strans, "%lld", ans);
+  // printf("str %s\n", strans);
   return strans;
 }
 
@@ -34,6 +35,7 @@ char *add(char *s1, char *s2){
   char *ans = (char*)malloc(sizeof(char) * 1005);
   int len1 = strlen(s1);
   int len2 = strlen(s2);
+  // printf("%lld %lld\n", len1, len2);
   for(int i = len1; i < 1005; i++){
     s1[i] = '0';
   }
@@ -47,7 +49,7 @@ char *add(char *s1, char *s2){
     swap(&s2[i], &s2[len2 - i - 1]);
   }
 
-  int carry = 0, len3 = 0;
+  int carry = 0, len3 = 1;
   for(int i = 0; i < 1005; i++){
     int num1 = s1[i] - '0';
     int num2 = s2[i] - '0';
