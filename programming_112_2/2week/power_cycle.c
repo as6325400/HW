@@ -26,12 +26,10 @@ signed main(){
       else arr[idx][i / 2] = min(arr[idx - 1][i], arr[idx - 1][i - 1]);
     }
     if(n % 2 == 1) arr[idx][n / 2] = arr[idx - 1][n - 1];
-    // for(int i = 0; i < n; i++) printf("%lld ", arr[idx][i]);
-    // printf("\n");
     n = (n + 1) / 2;
     idx++;
   }
-  // printf("%lld\n", idx);
+  
   if(idx % 2 == 0) printf("%lld\n", arr[idx - 1][0]);
   else{
     n = temp, idx = 1;
