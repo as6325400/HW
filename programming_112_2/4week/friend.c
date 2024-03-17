@@ -1,192 +1,89 @@
 #include<stdio.h>
-#include<stdlib.h>
 #define int long long
 
-struct node{
-  struct node *prev;
-  struct node *next;
-  int val;
-}typedef node;
+int n;
+int arr[200005];
 
-struct list{
-  struct node *start;
-  struct node *end;
-  int num;
-}typedef list;
-
-list* init_list(list *li)
-{
-  li = (list*)malloc(sizeof(list));
-  li -> start = NULL;
-  li -> end = NULL;
-  li -> num = 0;
-  return li;
-}
-
-list* insert(list *li, int num){
-  node *newnode = (node*)malloc(sizeof(node));
-  newnode -> prev = NULL;
-  newnode -> next = NULL;
-  newnode -> val = num;
-  if(li -> num == 0){
-    li -> start = newnode;
-    li -> end = newnode;
-  }
-  else{
-    li -> end -> next = newnode;
-    newnode -> prev = li -> end;
-    li -> end = newnode;
-  }
-  li -> num++;
-  return li;
-}
-
-int left(list *li, int id, int range, int dis){
-  int count = 0;
-  node *ptr = li -> start;
-  while(count < dis + 1){
-    if(ptr -> val >= (id - range) && ptr -> val <= (id + range) && ptr -> val != id){
-      return count;
-    }
-    ptr = ptr -> prev;
-    count++;
-  }
-  return (int)1e9;
-}
-
-int right(list *li, int id, int range, int dis){
-  int count = 0;
-  node *ptr = li -> start;
-  while(count < dis + 1){
-    if(ptr -> val >= (id - range) && ptr -> val <= (id + range) && ptr -> val != id){
-      return count;
-    }
-    ptr = ptr -> next;
-    count++;
-  }
-  return (int)1e9;
-}
-
-list *find(list *li, int id, int *check){
-  node *ptr = li -> start;
-  for(int i = 0; i < 200005; i++){
-    if(id == ptr -> val){
-      li -> start = ptr;
-      *check = 1;
-      return li;
-    }
-    ptr = ptr -> next;
-  }
-  return li;
-}
-
-list *remove_left(list *li, int dis){
-  int count = 0;
-  node *ptr = li -> start;
-  while(count < dis - 1)
-  { 
-    ptr = ptr -> prev;
-    count++;
-  }
-  ptr -> prev = ptr -> prev -> prev;
-  ptr -> prev -> next = ptr;
-  ptr = li -> start;
-  // printf("-----------------------------\n");
-  // for(int i = 0; i < li -> num; i++){
-  //   printf("%lld ", ptr -> val);
-  //   ptr = ptr -> next;
-  // }
-  // printf("\n");
-  // printf("-----------------------------\n");
-  ptr = li -> start;
-  ptr -> next -> prev = ptr -> prev;
-  ptr -> prev -> next = ptr -> next;
-  // printf("debug %lld %lld %lld\n", ptr -> val, ptr -> prev -> val, ptr -> next -> val);
-  li -> start = ptr -> prev;
-  ptr = li -> start;
-  // printf("-----------------------------\n");
-  // for(int i = 0; i < li -> num; i++){
-  //   printf("%lld ", ptr -> val);
-  //   ptr = ptr -> next;
-  // }
-  // printf("\n");
-  // printf("-----------------------------\n");
-  li -> num -= 2;
-  return li;
-}
-
-list *remove_right(list *li, int dis){
-  // printf("dis %lld\n", dis);
-  int count = 0;
-  node *ptr = li -> start;
-  while(count < dis - 1)
-  { 
-    ptr = ptr -> next;
-    count++;
-  }
-  ptr -> next = ptr -> next -> next;
-  ptr -> next -> prev = ptr;
-  ptr = li -> start;
-  // printf("-----------------------------\n");
-  // for(int i = 0; i < li -> num; i++){
-  //   printf("%lld ", ptr -> val);
-  //   ptr = ptr -> next;
-  // }
-  // printf("\n");
-  // printf("-----------------------------\n");
-  ptr -> next -> prev = ptr -> prev;
-  ptr -> prev -> next = ptr -> next;
-  li -> start = ptr -> prev;
-  ptr = li -> start;
-  li -> num -= 2;
-  return li;
-}
-
-signed main(){
-  int n;
-  list *li = NULL;
-  li = init_list(li);
-  int arr[200005];
-  scanf("%lld", &n);
+int find(int num){
   for(int i = 0; i < n; i++){
-    int num;
-    scanf("%lld", &num);
-    arr[i] = num;
-    li = insert(li, num);
+    if(arr[i] == num) return i;
   }
-  li -> end -> next = li -> start;
-  li -> start -> prev = li -> end;
-  int id, dis, range;
-  while(scanf("%lld %lld %lld", &id, &dis, &range) != EOF){
-    int check = 0;
-    li = find(li, id, &check);
-    // node *ptr = li -> start;
-    // for(int i = 0; i < li -> num; i++){
-    //   printf("%lld ", ptr -> val);
-    //   ptr = ptr -> next;
-    // }
-    // printf("\n");
-    if(check == 0) continue;
-    int l = left(li, id, range, dis);
-    int r = right(li, id, range, dis);
-    if(l == (int)1e9 && r == (int)1e9) continue;
-    if(l <= r) li = remove_left(li, l);
-    else li = remove_right(li, r);
-  }
-  if(li -> num == 0) printf("Wonderful\n");
-  for(int i = 0; i < n; i++){
-    int check = 0;
-    li = find(li, arr[i], &check);
-    // printf("check %lld\n", check);
-    if(check == 1){
-      // printf("%lld\n", li -> start -> val);
+  return 1e9;
+}
+
+void remove_left(int idx, int dis){
+  int count = 0;
+  for(int i = idx - 1; i >= 0; i--){
+    if(arr[i] != (int)2e18) count++;
+    if(count == dis){
+      arr[i] = (int)2e18;
       break;
     }
   }
-  node *ptr = li -> start;
-  for(int i = 0; i < li -> num; i++){
-    printf("%lld ", ptr -> val);
-    ptr = ptr -> next;
+  arr[idx] = (int)2e18;
+}
+
+void remove_right(int idx, int dis){
+  int count = 0;
+  for(int i = idx + 1; i < n; i++){
+    if(arr[i] != (int)2e18) count++;
+    if(count == dis){
+      arr[i] = (int)2e18;
+      break;
+    }
+  }
+  arr[idx] = (int)2e18;
+}
+
+int left(int idx, int dis, int id, int ran){
+  int count = 0;
+  int oi = idx;
+  while(idx >= 0 && count < dis + 1){
+    if(arr[idx] <= id + ran && arr[idx] >= id - ran && idx != oi){
+      return count;
+    }
+    if(arr[idx] == (int)2e18) count--;
+    idx--;
+    count++;
+  }
+  return 1e9;
+}
+
+int right(int idx, int dis, int id, int ran){
+  int count = 0;
+  int oi = idx;
+  while(idx < n && count < dis + 1){
+    if(arr[idx] <= id + ran && arr[idx] >= id - ran && idx != oi){
+      return count;
+    } 
+    if(arr[idx] == (int)2e18) count--;
+    idx++;
+    count++;
+  }
+  return 1e9;
+}
+
+signed main(){
+  scanf("%lld", &n);
+  for(int i = 0; i < n; i++) scanf("%lld", &arr[i]);
+  int id, dis, range;
+  while(scanf("%lld %lld %lld", &id, &dis, &range) != EOF){
+    int idx = find(id);
+    if(idx == (int)1e9) continue;
+    int l = left(idx, dis, id, range);
+    int r = right(idx, dis, id, range);
+    if(l == (int)1e9 && r == (int)1e9) continue;
+    if(l <= r) remove_left(idx, l);
+    else remove_right(idx, r);
+  }
+  int count = 0;
+  for(int i = 0; i < n; i++){
+    if(arr[i] == (int)2e18) continue;
+    else{
+      printf("%lld ", arr[i]);
+      count++;
+    }
   }
   printf("\n");
+  if(count == 0) printf("Wonderful\n");
 }
