@@ -1,0 +1,82 @@
+.card {
+  width: 400px;
+  height: 600px;
+  background-color: #f0f0f0;
+  border-radius: 50px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-size: 14px;
+  padding: 50px;
+}
+
+.card:nth-child(odd) {
+	background-color: black;
+}
+.card:nth-child(odd):hover {
+	transform: rotate(15deg);
+}
+.card:nth-child(even) {
+	margin-top: 70px;
+	background-color: rgb(113, 113, 113);
+}
+.card:nth-child(even):hover {
+	transform: rotate(-15deg);
+}
+
+.image-container {
+  border-radius: 50px;
+  position: relative;
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.googlemap-tag-img {
+	position: absolute;
+	top: -87px;
+	left: 50%;
+	transform: translateX(-50%);
+}
+
+.food-image {
+  border-radius: 50px;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  display: block;
+}
+
+.map-pin {
+  position: absolute;
+  top: 20px; /* 調整以根據您的需求 */
+  right: 20px; /* 調整以根據您的需求 */
+  width: 70px;
+  height: 70px;
+  background-image: url('your-map-pin-image.png');
+  background-size: cover;
+}
+
+.info {
+  border-radius: 40px;
+  padding: 20px;
+  background-color: #fff;
+  color: #333;
+  text-align: left;
+}
+
+.info h2 {
+  margin: 0 0 10px 0;
+  font-size: 16px;
+}
+
+.info p {
+  margin: 5px 0;
+}
+
+.info .content-left {
+  margin-right: 10px;
+}
+
+.info div {
+  display: flex;
+}

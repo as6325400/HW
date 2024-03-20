@@ -1,0 +1,62 @@
+/* 修正网页头部的基础样式 */
+.nav {
+  width: 100%;
+  height: 3%;
+  position: fixed;
+  top: 0;
+  background-color: #4CAF50; /* 你可以根据需要修改背景颜色 */
+  display: flex;
+  align-items: center;
+  justify-content: left;
+  z-index: 1000;
+}
+
+.nav-item {
+  margin: 0 10px;
+  width: 20%;
+  color: white;
+  text-decoration: none;
+  font-size: 20px; /* 基础字体大小，鼠标悬浮时会变为25px */
+}
+
+.nav-item img {
+  height: 100%;
+}
+
+.nav-item.logo {
+  text-align: center; /* 文本（和内联元素）水平居中 */
+  display: block; /* 如果原来不是块级元素，需要变更为块级元素 */
+}
+
+/* 鼠标悬浮时改变样式 */
+.nav-item:hover {
+  font-size: 25px;
+  font-weight: bold;
+  font-style: italic;
+}
+
+/* 下拉菜单的基础样式 */
+.dropdown-content {
+  display: none;
+  position: absolute;
+  background-color: #f9f9f9; /* 下拉菜单背景色，可以根据需要修改 */
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+}
+
+/* 鼠标悬浮于下拉菜单项时的样式 */
+.dropdown-content a {
+  color: black;
+  padding: 12px 16px;
+  text-decoration: none;
+  display: block;
+}
+
+.dropdown-content a:hover {
+  background-color: #ddd;
+}
+
+.dropdown:hover .dropdown-content {
+  display: block;
+}

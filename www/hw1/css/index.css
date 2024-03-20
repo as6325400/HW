@@ -1,0 +1,70 @@
+html, body {
+  height: 100%; /* 必须设置高度，以便使用min-height */
+  margin: 0; /* 去除默认边距 */
+  overflow: auto;
+  flex-direction: column; /* 让主体内容可以垂直展开 */
+}
+
+body > .content {
+  flex: 1; /* 弹性项目，会填满除了导航和页脚外的空间 */
+  margin-top: 1%; /* 或者任何你想要的内边距 */
+  height: 100%;
+  /* justify-content: center; 水平居中 */
+}
+
+@keyframes textAnimation {
+  0%, 100% { width: 0; }
+  16.66% { width: calc(1em * 1); } /* 第一个字符 */
+  33.33% { width: calc(1em * 2); } /* 第二个字符 */
+  50% { width: calc(1em * 3); } /* 第三个字符 */
+  66.66% { width: calc(1em * 4); } /* 第四个字符 */
+  83.33% { width: calc(1em * 5); } /* 第五个字符 */
+  100% { width: calc(1em * 6); } /* 第六个字符 */
+}
+
+.welcome-title {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 24px;
+  font-weight: bold;
+  width: 0; /* 初始宽度设置为0 */
+  animation: textAnimation 6s steps(1) forwards; /* 动画时间与文字数量相同，每秒显示一个字 */
+}
+
+
+.introduction {
+  display: flex;
+}
+
+.content img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.content .left{
+  width: 40%;
+}
+
+.content .right{
+  margin-left: 1vh;
+}
+
+.map {
+  margin-top: 5vh;
+  margin-bottom: 2vh;
+}
+
+.map .title {
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.map .google-map-container {
+  display: flex; /* 啟用flexbox */
+  justify-content: center; /* 水平居中 */
+  align-items: center; /* 垂直居中 */
+  height: 100%; /* 或者可以是固定高度，例如500px */
+}

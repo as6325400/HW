@@ -1,0 +1,13 @@
+footer {
+  background-color: #333; /* 页脚背景颜色，可根据喜好更改 */
+  color: white; /* 文字颜色，确保与背景颜色形成对比 */
+  text-align: center; /* 文字居中对齐 */
+  padding: 20px 0; /* 页脚内部的上下填充，可根据喜好调整 */
+  position: relative; /* 如果你需要定位页脚 */
+  width: 100%; /* 页脚宽度 */
+}
+
+footer p {
+  margin: 0; /* 去除默认的段落外边距 */
+  font-size: 16px; /* 文字大小，可根据喜好调整 */
+}
