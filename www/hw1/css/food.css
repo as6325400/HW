@@ -1,6 +1,7 @@
 .card {
   width: 400px;
   height: 600px;
+  position: relative;
   background-color: #f0f0f0;
   border-radius: 50px;
   overflow: hidden;
@@ -31,11 +32,9 @@
   margin-bottom: 20px;
 }
 
-.googlemap-tag-img {
-	position: absolute;
-	top: -87px;
-	left: 50%;
-	transform: translateX(-50%);
+.card .googlemap-tag-img {
+  width: 20px;
+	transform: translateY(-50%);
 }
 
 .food-image {
@@ -47,13 +46,16 @@
 }
 
 .map-pin {
-  position: absolute;
-  top: 20px; /* 調整以根據您的需求 */
-  right: 20px; /* 調整以根據您的需求 */
+  position: relative;
+  z-index: 10000;
   width: 70px;
-  height: 70px;
-  background-image: url('your-map-pin-image.png');
+  height: 100px;
+  left: 40%;
+  top: -10px;
+  background-image: url('../img/googlemap.jpg');
   background-size: cover;
+  transform: translateY(-50%);
+  overflow: auto;
 }
 
 .info {
