@@ -1,3 +1,24 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.piano-keys {
+  @apply w-[5rem] cursor-pointer relative h-[17rem] rounded-xl border border-black m-1 text-center;
+}
+
+.white-key {
+  @apply bg-white;
+}
+
+.black-key {
+  @apply w-[2rem] h-[10rem] rounded-lg rounded-t-none bg-gray-700 z-20 mx-[-20px];
+}
+
+.key-text {
+  @apply absolute bottom-3 left-1/2 transform -translate-x-1/2 text-slate-300;
+}
+
+.text-color{
+  @apply text-slate-300;
+}
+
