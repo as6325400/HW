@@ -5,79 +5,80 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="./src/css/style.css" rel="stylesheet">
 </head>
-<body>
-  <div class="inline-block bg-black">
-    <!-- header -->
-    <div class="flex my-4">
-      <div class="text-color w-1/4 text-center">HW2 PIANO</div>
-      <div class="w-1/4 flex">
-        <div class="text-color mr-2">Volume</div>
-        <input type="range" id="volume" name="volume" min="0" max="100" class="bg-slate-50">
+<body class="select-none bg-blue-300">
+  <div class="flex h-screen items-center justify-center">
+    <div class="inline-block bg-black">
+      <!-- header -->
+      <div class="flex my-4">
+        <div class="text-color w-1/4 text-center">HW2 PIANO</div>
+        <div class="w-1/4 flex">
+          <div class="text-color mr-2">Volume</div>
+          <input type="range" id="volume" name="volume" min="0" max="100" class="bg-slate-50">
+        </div>
+        <div class="w-1/4 flex">
+          <div class="text-color mr-2">Record</div>
+          <label class="inline-flex items-center cursor-pointer">
+            <input type="checkbox" value="" class="sr-only peer">
+            <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:bg-slate-500 dark:peer-focus:bg-slate-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"></div>
+          </label>
+        </div>
       </div>
-      <div class="w-1/4 flex">
-        <div class="text-color mr-2">Record</div>
-        <label class="inline-flex items-center cursor-pointer">
-          <input type="checkbox" value="" class="sr-only peer">
-          <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:bg-slate-500 dark:peer-focus:bg-slate-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"></div>
-          <span class="ms-3 text-sm font-medium text-gray-900 dark:text-gray-300">Toggle me</span>
-        </label>
+      <!-- key-boards -->
+      <div class="flex items-center justify-center">
+        <ul class="list-none flex justify-center">
+          <li class="piano-keys white-key">
+            <p class="key-text">a</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">w</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">s</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">e</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">d</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">f</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">t</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">g</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">y</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">h</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">u</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">j</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">k</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">o</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">l</p>
+          </li>
+          <li class="piano-keys black-key">
+            <p class="key-text">p</p>
+          </li>
+          <li class="piano-keys white-key">
+            <p class="key-text">;</p>
+          </li>
+        </ul>
       </div>
-    </div>
-    <!-- key-boards -->
-    <div class="flex items-center justify-center">
-      <ul class="list-none flex justify-center">
-        <li class="piano-keys white-key">
-          <p class="key-text">a</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">w</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">s</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">e</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">d</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">f</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">t</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">g</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">y</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">h</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">u</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">j</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">k</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">o</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">l</p>
-        </li>
-        <li class="piano-keys black-key">
-          <p class="key-text">p</p>
-        </li>
-        <li class="piano-keys white-key">
-          <p class="key-text">;</p>
-        </li>
-      </ul>
     </div>
   </div>
 </body>
