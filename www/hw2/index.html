@@ -13,19 +13,29 @@
         <div class="text-color w-1/4 text-center">HW2 PIANO</div>
         <div class="w-1/4 flex">
           <div class="text-color mr-2">Volume</div>
-          <input type="range" id="volume" name="volume" min="0" max="100" class="bg-slate-50">
+          <input type="range" id="volume" name="volume" min="0" max="1" step="0.01" class="bg-slate-50">
         </div>
         <div class="w-1/4 flex">
           <div class="text-color mr-2">Record</div>
           <label class="inline-flex items-center cursor-pointer">
-            <input type="checkbox" value="" class="sr-only peer">
+            <input type="checkbox" id="checkbox" value="" class="sr-only peer">
             <div class="relative w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:bg-slate-500 dark:peer-focus:bg-slate-500 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-slate-500"></div>
           </label>
+        </div>
+        <div class="w-1/4 flex">
+          <button id="record-button" class="w-auto h-full bg-gray-200 text-black rounded-full flex justify-center items-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7V5z" />
+            </svg>
+          </button>
+          <div id="clear" class="rounded-full bg-blue-100 w-auto h-auto px-4 ml-4">
+            clear
+          </div>
         </div>
       </div>
       <!-- key-boards -->
       <div class="flex items-center justify-center">
-        <ul class="list-none flex justify-center">
+        <ul id = "keys" class="list-none flex justify-center">
           <li class="piano-keys white-key">
             <p class="key-text">a</p>
           </li>
@@ -83,3 +93,68 @@
   </div>
 </body>
 </html>
+
+
+<script type="module">
+import { Audio } from './src/functions/audio.js';
+import { Recorder } from './src/functions/record.js';
+
+const Frequency = [262, 277 ,294, 311, 330, 349, 370, 392, 415, 440, 466, 494, 523, 554, 587, 622, 659];
+const key = ['a', 'w', 's', 'e', 'd', 'f', 't', 'g', 'y', 'h', 'u', 'j', 'k', 'o', 'l', 'p', ';'];
+const music = new Audio();
+const recorder = new Recorder();
+const liElements = document.querySelectorAll('.piano-keys');
+
+function pressKey(element, fqc) {
+  element.classList.add('active-key');
+  setTimeout(() => {
+    element.classList.remove('active-key');
+  }, 200); 
+  music.createSound(fqc);
+  recorder.record(fqc, element);
+}
+
+function clear() {
+  alert("已清空");
+  recorder.clear();
+}
+
+
+liElements.forEach((li, index) => {
+  if (Frequency[index]) {
+    li.addEventListener('click', () => pressKey(li, Frequency[index]));
+  }
+});
+
+document.addEventListener("keydown", (event) => {
+  if (event.isComposing || event.keyCode === 229) {
+    return;
+  }
+  if (key.includes(event.key)) {
+    const keyIndex = key.indexOf(event.key);
+    const li = liElements[keyIndex];
+    pressKey(li, Frequency[keyIndex]);
+  }
+});
+
+document.getElementById('volume').addEventListener('input', function(event) {
+  const volume = event.target.value;
+  music.setVolume(volume);
+});
+
+document.getElementById('checkbox').addEventListener('change', function(event) {
+  if (event.target.checked) {
+    recorder.startRecording();
+  } else {
+    recorder.stopRecording();
+  }
+});
+
+const playButton = document.getElementById('record-button');
+playButton.addEventListener('click', () => {
+  recorder.playBack();
+});
+
+const clearButton = document.getElementById('clear');
+clearButton.addEventListener('click', clear);
+</script>

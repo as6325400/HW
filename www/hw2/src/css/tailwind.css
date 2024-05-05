@@ -21,3 +21,7 @@
 .text-color{
   @apply text-slate-300;
 }
+
+.active-key {
+  @apply bg-gray-400;
+}
