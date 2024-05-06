@@ -7,18 +7,20 @@
         :id="field.id"
         :name="field.name"
         v-model="field.value"
+        autocomplete="new-password"
         class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-50"
       />
     </div>
     <button :class="buttonClass" type="submit" @click="onClick">
       {{ buttonText }}
     </button>
-    <slot></slot>
+    <div class="text-center mt-2 text-rose-500">
+      <slot></slot>
+    </div>
   </form>
 </template>
 
 <script setup>
-// import { defineProps, defineEmits } from 'vue'
 const props = defineProps({
   fields: Array,
   buttonText: {
@@ -36,7 +38,6 @@ const emit = defineEmits(['button-click'])
 
 function onClick(event) {
   event.preventDefault();
-  console.log('Button clicked')
   emit('button-click')
 }
 </script>
