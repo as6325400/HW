@@ -1,8 +1,16 @@
 <template>
-  <Title></Title>
-  <DynamicForm :fields="fields" buttonText="Register" @button-click="RegisterHandler" >
-    {{errorMsg}}
-  </DynamicForm>
+  <div>
+    <Title></Title>
+    <DynamicForm :fields="fields" buttonText="Register" linkText = "已經註冊?點此登入"
+    linkTo = "/login" @button-click="RegisterHandler" >
+      <template #header>
+        Register to start your session
+      </template>
+      <template #link>
+        {{errorMsg}}
+      </template>
+    </DynamicForm>
+  </div>
 </template>
 
 <script setup>
