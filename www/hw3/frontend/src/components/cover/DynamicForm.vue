@@ -22,7 +22,7 @@
         {{ linkText }}
       </router-link>
     </div>
-    <div class="text-center mt-2 text-rose-500">
+    <div class="text-center mt-2" :class="linkClass">
       <slot name="link"></slot>
     </div>
   </form>
@@ -47,13 +47,17 @@ const props = defineProps({
   linkTo: {
     type: String,
     default: ''
+  },
+  linkClass: {
+    type: String,
+    default: ''
   }
 })
 
 const emit = defineEmits(['button-click'])
 
 function onClick(event) {
-  event.preventDefault();
+  event.preventDefault()
   emit('button-click')
 }
 </script>

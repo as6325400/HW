@@ -1,66 +1,46 @@
 <template>
-  <a-layout>
-    <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
-      <div class="logo" />
-      <a-menu v-model:selectedKeys="selectedKeys" theme="dark" mode="inline">
-        <a-menu-item key="1">
-          <user-outlined />
-          <span>nav 1</span>
-        </a-menu-item>
-        <a-menu-item key="2">
-          <video-camera-outlined />
-          <span>nav 2</span>
-        </a-menu-item>
-        <a-menu-item key="3">
-          <upload-outlined />
-          <span>nav 3</span>
-        </a-menu-item>
-      </a-menu>
-    </a-layout-sider>
-    <a-layout>
-      <a-layout-header style="background: #fff; padding: 0">
-        <menu-unfold-outlined
-          v-if="collapsed"
-          class="trigger"
-          @click="() => (collapsed = !collapsed)"
-        />
-        <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
-      </a-layout-header>
-      <a-layout-content
-        :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }"
-      >
-        Content
-      </a-layout-content>
-    </a-layout>
-  </a-layout>
+  <a-popover v-model:open="isOpen" placement="bottom" trigger="click">
+    <template #content>
+      <a-button block style="margin-bottom: 8px" @click="updateProfile">Update</a-button>
+      <a-button block type="primary" @click="signOut">Sign out</a-button>
+    </template>
+
+    <a-space style="cursor: pointer" @click="togglePopover">
+      <a-avatar :src="imgpath">
+        <template #icon><UserOutlined /></template>
+      </a-avatar>
+      <span>{{ username }}</span>
+    </a-space>
+  </a-popover>
 </template>
 
 <script setup>
-import { ref } from 'vue';
-const selectedKeys = ref(['1']);
-const collapsed = ref(false);
+import { ref } from 'vue'
+import { UserOutlined } from '@ant-design/icons-vue'
+import { Avatar, Button, Popover, Space } from 'ant-design-vue'
+import imageSrc from './images.jpeg' // 确保这里的文件名与你的图片文件名相匹配
+import { defineEmits } from 'vue'
+
+const isOpen = ref(false)
+const username = ref('Username')
+const imgpath = ref(imageSrc) // 使用导入的图片路径
+
+function togglePopover() {
+  isOpen.value = !isOpen.value
+}
+
+const emit = defineEmits(['update-click'])
+function updateProfile() {
+  console.log('Updating profile...')
+  isOpen.value = false
+  emit('update-click')
+}
+
+function signOut() {
+  console.log('Signing out...')
+}
 </script>
 
-<style>
-#components-layout-demo-custom-trigger .trigger {
-  font-size: 18px;
-  line-height: 64px;
-  padding: 0 24px;
-  cursor: pointer;
-  transition: color 0.3s;
-}
-
-#components-layout-demo-custom-trigger .trigger:hover {
-  color: #1890ff;
-}
-
-#components-layout-demo-custom-trigger .logo {
-  height: 32px;
-  background: rgba(255, 255, 255, 0.3);
-  margin: 16px;
-}
-
-.site-layout .site-layout-background {
-  background: #fff;
-}
+<style scoped>
+/* Add any specific styles you need here */
 </style>
