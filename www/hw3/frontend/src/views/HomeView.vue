@@ -7,7 +7,7 @@
           <template #title>
             <span>
               <user-outlined />
-              <span>User</span>
+              <span>{{ username }}</span>
             </span>
           </template>
           <a-menu-item key="3">Tom</a-menu-item>
@@ -19,54 +19,25 @@
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <div class="flex">
-          <InfoHeader class="ml-auto" @update-click="update_click" />
+          <InfoHeader class="ml-auto" @update-click="update_click" :username="username" />
           <div class="w-10"></div>
         </div>
       </a-layout-header>
       <a-layout-content style="margin: 0 16px">
         <a-breadcrumb style="margin: 16px 0">
           <a-breadcrumb-item>User</a-breadcrumb-item>
-          <a-breadcrumb-item>Bill</a-breadcrumb-item>
+          <a-breadcrumb-item>{{ username }}</a-breadcrumb-item>
         </a-breadcrumb>
         <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
           Bill is a cat.
         </div>
       </a-layout-content>
       <a-layout-footer style="text-align: center">
-        Ant Design ©2018 Created by Ant UED
+        Design ©2024 Created by as6325400
       </a-layout-footer>
     </a-layout>
   </a-layout>
-  <!-- <a-modal
-    v-model:visible="isModalVisible"
-    title="Users Profile"
-    @ok="handleOk"
-    @cancel="handleCancel"
-  >
-    <form class="space-y-4">
-      <div>
-        <label>Username:</label>
-        <a-input v-model="profile.username" placeholder="Username" />
-      </div>
-      <div>
-        <label>Password:</label>
-        <a-input type="password" v-model="profile.password" placeholder="Password" />
-      </div>
-      <div>
-        <label>Photo:</label>
-        <a-input v-model="profile.photo" placeholder="Upload Photo" />
-      </div>
-      <div>
-        <label>Current Password:</label>
-        <a-input
-          type="password"
-          v-model="currentPassword"
-          placeholder="Input current password to save changes"
-        />
-      </div>
-    </form>
-  </a-modal> -->
-  <UpdateComponent :isModalVisible="isModalVisible" />
+  <UpdateComponent v-model:open="isModalVisible" />
 </template>
 <script lang="ts" setup>
 import {
@@ -78,25 +49,19 @@ import {
 } from '@ant-design/icons-vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
 import UpdateComponent from '@/components/main/UpdateComponent.vue'
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
+import { fetchUserDataWithToken } from '@/functions/user'
+
+let username = ref('')
+
+onMounted(async () => {
+  const data = await fetchUserDataWithToken()
+  username.value = data.username
+})
+
 const collapsed = ref<boolean>(false)
 const selectedKeys = ref<string[]>(['1'])
-// const profile = ref({
-//   username: 'admin',
-//   password: '',
-//   photo: ''
-// })
-// const currentPassword = ref('')
-const isModalVisible = ref(true)
-// function handleOk() {
-//   console.log('Submitted:', profile.value)
-//   isModalVisible.value = false
-// }
-
-// function handleCancel() {
-//   isModalVisible.value = false
-// }
-
+const isModalVisible = ref(false)
 const update_click = () => {
   isModalVisible.value = true
   console.log('update_click')

@@ -58,7 +58,8 @@ const loginHandler = () => {
     if (res.status === 200) {
       errorMsgClass.value = 'text-green-500'
       errorMsg.value = 'Login success'
-      localStorage.setItem('token', res.data.token)
+      localStorage.setItem('token', res.data.access_token)
+      console.log(localStorage.getItem('token'))
       setTimeout(() => {
         window.location.href = '/home'
       }, 1000)

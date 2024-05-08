@@ -19,11 +19,21 @@ import { ref } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Avatar, Button, Popover, Space } from 'ant-design-vue'
 import imageSrc from './images.jpeg' // 确保这里的文件名与你的图片文件名相匹配
-import { defineEmits } from 'vue'
+import { defineEmits, defineProps } from 'vue'
+import { Logout } from '@/functions/user'
 
 const isOpen = ref(false)
-const username = ref('Username')
-const imgpath = ref(imageSrc) // 使用导入的图片路径
+
+const props = defineProps({
+  username: {
+    type: String,
+    default: 'Username'
+  },
+  imgpath: {
+    type: String,
+    default: imageSrc
+  }
+})
 
 function togglePopover() {
   isOpen.value = !isOpen.value
@@ -37,7 +47,10 @@ function updateProfile() {
 }
 
 function signOut() {
-  console.log('Signing out...')
+  Logout()
+  setTimeout(() => {
+    window.location.href = '/login'
+  }, 1000)
 }
 </script>
 
