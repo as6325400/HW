@@ -1,7 +1,7 @@
 <template>
-  <a-table :columns="columns" :data-source="dataSource" bordered>
+  <a-table :columns="columns" :data-source="dataSource" :pagination="pagination" bordered>
     <template #bodyCell="{ column, text, record }">
-      <template v-if="['name', 'age', 'address'].includes(column.dataIndex)">
+      <div v-if="['name', 'title', 'option'].includes(column.dataIndex)">
         <div>
           <a-input
             v-if="editableData[record.key]"
@@ -12,8 +12,8 @@
             {{ text }}
           </template>
         </div>
-      </template>
-      <template v-else-if="column.dataIndex === 'operation'">
+      </div>
+      <div v-else-if="column.dataIndex === 'operation'">
         <div class="editable-row-operations">
           <span v-if="editableData[record.key]">
             <a-typography-link @click="save(record.key)">Save</a-typography-link>
@@ -25,29 +25,39 @@
             <a @click="edit(record.key)">Edit</a>
           </span>
         </div>
-      </template>
+      </div>
     </template>
   </a-table>
 </template>
+
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash-es';
-import { reactive, ref } from 'vue';
-import type { UnwrapRef } from 'vue';
+import { defineProps, reactive, toRefs, defineExpose } from 'vue';
+
+const pagination = reactive({
+  pageSizeOptions: ['10', '20', '30', '50'],
+  showSizeChanger: true,
+  defaultPageSize: 10,
+});
+
+const props = defineProps({
+  initialData: Array
+});
 
 const columns = [
   {
     title: 'name',
     dataIndex: 'name',
+    width: '20%',
+  },
+  {
+    title: 'title',
+    dataIndex: 'title',
     width: '25%',
   },
   {
-    title: 'age',
-    dataIndex: 'age',
-    width: '15%',
-  },
-  {
-    title: 'address',
-    dataIndex: 'address',
+    title: 'option',
+    dataIndex: 'option',
     width: '40%',
   },
   {
@@ -55,37 +65,26 @@ const columns = [
     dataIndex: 'operation',
   },
 ];
-interface DataItem {
-  key: string;
-  name: string;
-  age: number;
-  address: string;
-}
-const data: DataItem[] = [];
-for (let i = 0; i < 100; i++) {
-  data.push({
-    key: i.toString(),
-    name: `Edrward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-    isEditing: true
-  });
-}
 
-const dataSource = ref(data);
+const dataSource = reactive(props.initialData);
 const editableData: UnwrapRef<Record<string, DataItem>> = reactive({});
 
 const edit = (key: string) => {
-  editableData[key] = cloneDeep(dataSource.value.filter(item => key === item.key)[0]);
+  console.log(key);
+  editableData[key] = cloneDeep(dataSource.find(item => item.key === key));
 };
 const save = (key: string) => {
-  Object.assign(dataSource.value.filter(item => key === item.key)[0], editableData[key]);
+  Object.assign(dataSource.find(item => item.key === key), editableData[key]);
   delete editableData[key];
 };
 const cancel = (key: string) => {
   delete editableData[key];
 };
+defineExpose({
+  edit,
+});
 </script>
+
 <style scoped>
 .editable-row-operations a {
   margin-right: 8px;
