@@ -15,7 +15,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Avatar, Button, Popover, Space } from 'ant-design-vue'
 import imageSrc from './images.jpeg' // 确保这里的文件名与你的图片文件名相匹配
@@ -23,6 +23,12 @@ import { defineEmits, defineProps } from 'vue'
 import { Logout } from '@/functions/user'
 
 const isOpen = ref(false)
+
+watch(isOpen, (val) => {
+  if(!props.clickable){
+    isOpen.value = false
+  }
+})
 
 const props = defineProps({
   username: {
@@ -32,11 +38,19 @@ const props = defineProps({
   imgpath: {
     type: String,
     default: imageSrc
+  },
+  clickable: {
+    type: Boolean,
+    default: true
   }
 })
 
 function togglePopover() {
-  isOpen.value = !isOpen.value
+  console.log(props.clickable, isOpen.value)
+  if (props.clickable) {
+    console.log('Toggling popover...')
+    isOpen.value = !isOpen.value
+  }
 }
 
 const emit = defineEmits(['update-click'])

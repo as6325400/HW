@@ -27,9 +27,20 @@
         <a-breadcrumb style="margin: 16px 0">
           <a-breadcrumb-item>User</a-breadcrumb-item>
           <a-breadcrumb-item>{{ username }}</a-breadcrumb-item>
+          
         </a-breadcrumb>
         <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
-          Bill is a cat.
+            <a-carousel autoplay>
+              <div><h3>1</h3></div>
+              <div><h3>2</h3></div>
+              <div><h3>3</h3></div>
+              <div><h3>4</h3></div>
+            </a-carousel>
+          <div class="polls-container mt-4">
+            <div class="poll" v-for="(poll, index) in polls" :key="index">
+              <PollComponent/>
+            </div>
+          </div>
         </div>
       </a-layout-content>
       <a-layout-footer style="text-align: center">
@@ -51,12 +62,14 @@ import InfoHeader from '@/components/main/HeaderComponent.vue'
 import UpdateComponent from '@/components/main/UpdateComponent.vue'
 import { onMounted, ref } from 'vue'
 import { fetchUserDataWithToken } from '@/functions/user'
+import PollComponent from '@/components/main/PollComponent.vue'
 
 let username = ref('')
 
 onMounted(async () => {
-  const data = await fetchUserDataWithToken()
-  username.value = data.username
+  // const data = await fetchUserDataWithToken()
+  // username.value = data.username
+  username.value = 'admin'
 })
 
 const collapsed = ref<boolean>(false)
@@ -65,6 +78,46 @@ const isModalVisible = ref(false)
 const update_click = () => {
   isModalVisible.value = true
   console.log('update_click')
+}
+
+const polls = ref([
+  { 
+    id: 1,
+    title: "問題一",
+    description: "描述一",
+    options: [{ id: 101, text: "選項 A", votes: 10 }, { id: 102, text: "選項 B", votes: 5 }]
+  },
+  { 
+    id: 2,
+    title: "問題二",
+    description: "描述二",
+    options: [{ id: 201, text: "選項 C", votes: 3 }, { id: 202, text: "選項 D", votes: 7 }]
+  },
+  { 
+    id: 3,
+    title: "問題二",
+    description: "描述二",
+    options: [{ id: 201, text: "選項 C", votes: 3 }, { id: 202, text: "選項 D", votes: 7 }]
+  }
+  // 更多投票模塊...
+])
+
+const vote = (pollId, optionId) => {
+  const poll = polls.value.find(p => p.id === pollId)
+  const option = poll.options.find(o => o.id === optionId)
+  option.votes++
+}
+
+const calculatePercentage = (votes, pollId) => {
+  const poll = polls.value.find(p => p.id === pollId)
+  const totalVotes = poll.options.reduce((total, option) => total + option.votes, 0)
+  return totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(0) : 0
+}
+
+const isSelected = (pollId, optionId) => {
+  const poll = polls.value.find(p => p.id === pollId)
+  const option = poll.options.find(o => o.id === optionId)
+  return option.selected // 或者其他方式標記已選擇選項
 }
 </script>
 <style scoped>
@@ -80,4 +133,29 @@ const update_click = () => {
 [data-theme='dark'] .site-layout .site-layout-background {
   background: #141414;
 }
+.polls-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px; /* 每個卡片之間的間隙 */
+}
+
+.poll {
+  flex: 1 1 48%; /* 每個投票卡片佔一行的 48%，兩個加起來接近 100%，考慮到間隙 */
+}
+
+.polls-container :nth-last-child(1):nth-child(odd) {
+  flex: 1 1 48%;
+}
+
+:deep(.slick-slide) {
+  text-align: center;
+  height: 160px;
+  line-height: 160px;
+  background: #d3d3d3 ;
+  overflow: hidden;
+}
+:deep(.slick-slide h3) {
+  color: #fff;
+}
+
 </style>
