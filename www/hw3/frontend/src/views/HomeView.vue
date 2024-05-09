@@ -143,9 +143,6 @@ const isSelected = (pollId, optionId) => {
   flex: 1 1 48%; /* 每個投票卡片佔一行的 48%，兩個加起來接近 100%，考慮到間隙 */
 }
 
-.polls-container :nth-last-child(1):nth-child(odd) {
-  flex: 1 1 48%;
-}
 
 :deep(.slick-slide) {
   text-align: center;

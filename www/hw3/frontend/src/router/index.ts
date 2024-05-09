@@ -30,6 +30,11 @@ const router = createRouter({
       component: () => import('@/views/UploadView.vue')
     },
     {
+      path: '/poll',
+      name: 'poll',
+      component: () => import('@/views/PollView.vue')
+    },
+    {
       path: '/test',
       name: 'test',
       component: () => import('@/views/TestView.vue')
