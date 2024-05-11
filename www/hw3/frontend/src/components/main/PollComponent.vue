@@ -7,7 +7,7 @@
         <h1 class="text-lg font-bold">問題投票</h1>
         <p>請選擇下列選項進行投票，您的選擇對我們非常重要。</p>
       </div>
-      <InfoHeader class="ml-auto" :clickable="false" :username="username" />
+      <InfoHeader class="ml-auto" :clickable="false" :username="props.username" />
     </div>
     <!-- 投票選項 -->
     <div v-for="(option, index) in options" :key="index" class="mt-2">
@@ -21,6 +21,29 @@
 <script setup>
 import { ref } from 'vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
+
+const props = defineProps({
+  username:{
+    type: String,
+    value: 'default'
+  },
+  photo:{
+    type: String,
+    value: 'default'
+  },
+  description:{
+    type: String,
+    value: 'default'
+  },
+  title:{
+    type: String,
+    value: 'default'
+  },
+  options:{
+    type: Array,
+    value: []
+  }
+})
 
 const options = ref([
   { id: 1, text: "你喜歡的不是綠茶婊", votes: 3 },

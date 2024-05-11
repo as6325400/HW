@@ -10,9 +10,12 @@
               <span>{{ username }}</span>
             </span>
           </template>
-          <a-menu-item key="3">Tom</a-menu-item>
-          <a-menu-item key="4">Bill</a-menu-item>
-          <a-menu-item key="5">Alex</a-menu-item>
+          <a-menu-item key="3">
+            <router-link to="/home">Home</router-link>
+          </a-menu-item>
+          <a-menu-item key="4">
+            <router-link to="/poll">Poll page</router-link>
+          </a-menu-item>
         </a-sub-menu>
       </a-menu>
     </a-layout-sider>
@@ -31,14 +34,12 @@
         </a-breadcrumb>
         <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
             <a-carousel autoplay>
-              <div><h3>1</h3></div>
-              <div><h3>2</h3></div>
-              <div><h3>3</h3></div>
-              <div><h3>4</h3></div>
+              <div>User Number: {{usernumber}}</div>
+              <div>Topic Number: {{topicnumber}}</div>
             </a-carousel>
           <div class="polls-container mt-4">
             <div class="poll" v-for="(poll, index) in polls" :key="index">
-              <PollComponent/>
+              <PollComponent :username="username"/>
             </div>
           </div>
         </div>
@@ -65,15 +66,19 @@ import { fetchUserDataWithToken } from '@/functions/user'
 import PollComponent from '@/components/main/PollComponent.vue'
 
 let username = ref('')
+let usernumber = ref('')
+let topicnumber = ref('')
 
 onMounted(async () => {
-  // const data = await fetchUserDataWithToken()
-  // username.value = data.username
-  username.value = 'admin'
+  const data = await fetchUserDataWithToken()
+  console.log(data)
+  username.value = data.user.username
+  usernumber.value = data.userCount
+  topicnumber.value = data.topicsCount
 })
 
 const collapsed = ref<boolean>(false)
-const selectedKeys = ref<string[]>(['1'])
+const selectedKeys = ref<string[]>(['3'])
 const isModalVisible = ref(false)
 const update_click = () => {
   isModalVisible.value = true
