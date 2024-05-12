@@ -22,7 +22,12 @@
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
         <div class="flex">
-          <InfoHeader class="ml-auto" @update-click="update_click" :username="username" />
+          <InfoHeader
+            class="ml-auto"
+            @update-click="update_click"
+            :username="username"
+            :imgpath="imgpath"
+          />
           <div class="w-10"></div>
         </div>
       </a-layout-header>
@@ -30,16 +35,15 @@
         <a-breadcrumb style="margin: 16px 0">
           <a-breadcrumb-item>User</a-breadcrumb-item>
           <a-breadcrumb-item>{{ username }}</a-breadcrumb-item>
-          
         </a-breadcrumb>
         <div :style="{ padding: '24px', background: '#fff', minHeight: '360px' }">
-            <a-carousel autoplay>
-              <div>User Number: {{usernumber}}</div>
-              <div>Topic Number: {{topicnumber}}</div>
-            </a-carousel>
+          <a-carousel autoplay>
+            <div>User Number: {{ usernumber }}</div>
+            <div>Topic Number: {{ topicnumber }}</div>
+          </a-carousel>
           <div class="polls-container mt-4">
             <div class="poll" v-for="(poll, index) in polls" :key="index">
-              <PollComponent :username="username"/>
+              <PollComponent :username="username" />
             </div>
           </div>
         </div>
@@ -49,16 +53,10 @@
       </a-layout-footer>
     </a-layout>
   </a-layout>
-  <UpdateComponent v-model:open="isModalVisible" />
+  <UpdateComponent v-model:open="isModalVisible" :imgpath="imgpath" :username="username" />
 </template>
 <script lang="ts" setup>
-import {
-  PieChartOutlined,
-  DesktopOutlined,
-  UserOutlined,
-  TeamOutlined,
-  FileOutlined
-} from '@ant-design/icons-vue'
+import { UserOutlined } from '@ant-design/icons-vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
 import UpdateComponent from '@/components/main/UpdateComponent.vue'
 import { onMounted, ref } from 'vue'
@@ -68,13 +66,23 @@ import PollComponent from '@/components/main/PollComponent.vue'
 let username = ref('')
 let usernumber = ref('')
 let topicnumber = ref('')
+let imgpath = ref('')
 
 onMounted(async () => {
   const data = await fetchUserDataWithToken()
   console.log(data)
+  if (
+    (data.status === 401 && data.message === 'Unauthorized') ||
+    data.statusText === 'Unauthorized'
+  ) {
+    console.log('Unauthorized')
+    window.location.href = '/login'
+    return
+  }
   username.value = data.user.username
-  usernumber.value = data.userCount
-  topicnumber.value = data.topicsCount
+  usernumber.value = data.people_num
+  topicnumber.value = data.topic_num
+  imgpath.value = import.meta.env.VITE_BACKEND + data.user.photo
 })
 
 const collapsed = ref<boolean>(false)
@@ -86,42 +94,51 @@ const update_click = () => {
 }
 
 const polls = ref([
-  { 
+  {
     id: 1,
-    title: "問題一",
-    description: "描述一",
-    options: [{ id: 101, text: "選項 A", votes: 10 }, { id: 102, text: "選項 B", votes: 5 }]
+    title: '問題一',
+    description: '描述一',
+    options: [
+      { id: 101, text: '選項 A', votes: 10 },
+      { id: 102, text: '選項 B', votes: 5 }
+    ]
   },
-  { 
+  {
     id: 2,
-    title: "問題二",
-    description: "描述二",
-    options: [{ id: 201, text: "選項 C", votes: 3 }, { id: 202, text: "選項 D", votes: 7 }]
+    title: '問題二',
+    description: '描述二',
+    options: [
+      { id: 201, text: '選項 C', votes: 3 },
+      { id: 202, text: '選項 D', votes: 7 }
+    ]
   },
-  { 
+  {
     id: 3,
-    title: "問題二",
-    description: "描述二",
-    options: [{ id: 201, text: "選項 C", votes: 3 }, { id: 202, text: "選項 D", votes: 7 }]
+    title: '問題二',
+    description: '描述二',
+    options: [
+      { id: 201, text: '選項 C', votes: 3 },
+      { id: 202, text: '選項 D', votes: 7 }
+    ]
   }
   // 更多投票模塊...
 ])
 
 const vote = (pollId, optionId) => {
-  const poll = polls.value.find(p => p.id === pollId)
-  const option = poll.options.find(o => o.id === optionId)
+  const poll = polls.value.find((p) => p.id === pollId)
+  const option = poll.options.find((o) => o.id === optionId)
   option.votes++
 }
 
 const calculatePercentage = (votes, pollId) => {
-  const poll = polls.value.find(p => p.id === pollId)
+  const poll = polls.value.find((p) => p.id === pollId)
   const totalVotes = poll.options.reduce((total, option) => total + option.votes, 0)
   return totalVotes > 0 ? ((votes / totalVotes) * 100).toFixed(0) : 0
 }
 
 const isSelected = (pollId, optionId) => {
-  const poll = polls.value.find(p => p.id === pollId)
-  const option = poll.options.find(o => o.id === optionId)
+  const poll = polls.value.find((p) => p.id === pollId)
+  const option = poll.options.find((o) => o.id === optionId)
   return option.selected // 或者其他方式標記已選擇選項
 }
 </script>
@@ -148,16 +165,14 @@ const isSelected = (pollId, optionId) => {
   flex: 1 1 48%; /* 每個投票卡片佔一行的 48%，兩個加起來接近 100%，考慮到間隙 */
 }
 
-
 :deep(.slick-slide) {
   text-align: center;
   height: 160px;
   line-height: 160px;
-  background: #d3d3d3 ;
+  background: #d3d3d3;
   overflow: hidden;
 }
 :deep(.slick-slide h3) {
   color: #fff;
 }
-
 </style>

@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    v-model:visible="isModalVisible"
+    v-model:open="isModalVisible"
     title="Users Profile"
     @ok="handleOk"
     @cancel="handleCancel"
@@ -8,18 +8,17 @@
     <a-form :model="profile" layout="vertical" class="profile-form">
       <div class="avatar-upload">
         <a-upload
-          class="avatar-uploader border-none bg-transparent outline-none ring-0"
+          class="avatar-uploader border-none bg-transparent outline-none ring-0 opacity-100"
           list-type="picture-card"
           :show-upload-list="false"
           :before-upload="beforeUpload"
           @change="handleChange"
         >
-          <div v-if="profile.photo" class="avatar-wrapper">
-            <a-avatar :src="profile.photo" :size="192" />
-            <!-- <div class="avatar-uploader-trigger">Click to upload</div> -->
+          <div v-if="props.imgpath" class="avatar-wrapper">
+            <a-avatar :src="props.imgpath" :size="192" />
           </div>
           <div v-else class="avatar-uploader-trigger">
-            <a-avatar :src="img" class="h-full w-full absolute" :size="192">
+            <a-avatar class="h-full w-full absolute" :size="192">
               <template #icon><UserOutlined /></template>
             </a-avatar>
             <span class="upload-trigger absolute z-2">Click to upload</span>
@@ -29,27 +28,48 @@
       <a-segmented v-model:value="value" block :options="data" />
       <div v-if="showPhoto">
         <a-form-item label="Username">
-          <a-input v-model="profile.username" placeholder="Username" autocomplete="new-password"/>
+          <a-input
+            v-model:value="profile.username"
+            placeholder="Username"
+            autocomplete="new-password"
+          />
         </a-form-item>
         <a-form-item label="Password">
-          <a-input type="password" v-model="profile.password" placeholder="Password" autocomplete="new-password"/>
-        </a-form-item>
-        <a-form-item label="Confirm Password">
-          <a-input type="password" v-model="profile.confirmPassword" placeholder="Confirm Password" autocomplete="new-password"/>
+          <a-input
+            type="password"
+            v-model:value="profile.password"
+            placeholder="Password"
+            autocomplete="new-password"
+          />
         </a-form-item>
       </div>
       <div v-else>
         <a-form-item label="Username">
-          <a-input v-model="profile.username" placeholder="Username" autocomplete="new-password"/>
+          <a-input v-model="profile.username" placeholder="Username" autocomplete="new-password" />
         </a-form-item>
         <a-form-item label="New Password">
-          <a-input type="password" v-model="profile.password" placeholder="Password" autocomplete="new-password"/>
+          <a-input
+            type="password"
+            v-model="profile.password"
+            placeholder="Password"
+            autocomplete="new-password"
+          />
         </a-form-item>
         <a-form-item label="Confirm New Password">
-          <a-input type="password" v-model="profile.confirmPassword" placeholder="Confirm Password" autocomplete="new-password"/>
+          <a-input
+            type="password"
+            v-model="profile.confirmPassword"
+            placeholder="Confirm Password"
+            autocomplete="new-password"
+          />
         </a-form-item>
         <a-form-item label="Current Password">
-          <a-input type="password" v-model="profile.password" placeholder="Password" autocomplete="new-password"/>
+          <a-input
+            type="password"
+            v-model="profile.password"
+            placeholder="Password"
+            autocomplete="new-password"
+          />
         </a-form-item>
       </div>
     </a-form>
@@ -59,29 +79,74 @@
 import { ref, reactive, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Modal, Form, Input, Upload, Avatar } from 'ant-design-vue'
-import img from './images.jpeg' // Make sure the filename here matches your image file name
+import { uploadimg } from '@/functions/user'
+
 const isModalVisible = ref(false)
 const showPhoto = ref(true)
 const profile = ref({
   username: '',
   password: '',
-  confirmPassword: '',
-  photo: null
+  confirmPassword: ''
 })
-const data = reactive(['Photo', 'Password']);
-const value = ref(data[0]);
+
+const props = defineProps({
+  imgpath: {
+    type: String,
+    default: null
+  },
+  username: {
+    type: String,
+    default: 'Username'
+  }
+})
+
+const data = reactive(['Photo', 'Password'])
+const value = ref(data[0])
 watch(value, (val) => {
   if (val === 'Photo') {
     showPhoto.value = true
     console.log('Photo')
-  }
-  else{
+  } else {
     showPhoto.value = false
     console.log('Password')
   }
 })
-function handleOk() {
-  console.log('Submitted:', profile.value)
+
+watch(
+  () => props.username,
+  (val) => {
+    console.log('props.username', val)
+    if (val) {
+      profile.value.username = val
+    }
+  }
+)
+
+async function handleOk() {
+  if (showPhoto.value) {
+    if (!profile.value.photo) {
+      console.log('Please upload a photo')
+      return
+    }
+    if (!profile.value.username) {
+      console.log(profile.value.username)
+      console.log('Please enter a username')
+      return
+    }
+    if (!profile.value.password) {
+      console.log('Please enter a password')
+      return
+    }
+    const response = await uploadimg(
+      profile.value.username,
+      profile.value.password,
+      profile.value.photo
+    )
+    console.log('Uploading photo...', response)
+  } else {
+    console
+  }
+  // console.log('Submitted:', profile.value)
   isModalVisible.value = false
 }
 
@@ -98,15 +163,20 @@ function beforeUpload(file) {
 
   if (!isValidExtension) {
     alert('You can only upload image files with extensions .png, .jpg, or .jpeg!')
-    return false 
+    return false
   }
-  return true 
+  return false
 }
 
 function handleChange({ file }) {
-  if (file.status === 'done') {
-    // Assuming the response from server includes the url of the image
-    profile.value.photo = file.response.url
+  const imageData = ref(null)
+  if (file && file.type.startsWith('image')) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      imageData.value = e.target.result // 將讀取到的資料 URL 賦值給 imageData
+      profile.value.photo = imageData.value // 存儲文件對象到 ref 變量
+    }
+    reader.readAsDataURL(file) // 讀取文件作為資料 URL
   }
 }
 </script>

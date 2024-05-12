@@ -86,9 +86,51 @@ export const fetchUserDataWithToken = async () => {
         }
       }
     )
+    console.log('response:', response)
     return response.data
-  } catch (error) {
-    console.error('Error:', error)
-    throw error // 可以选择抛出错误，也可以处理错误并返回一个默认值
+  } catch (error: any) {
+    console.error('Error:', error.response)
+    return error.response
+  }
+}
+
+export const uploadimg = async (username: string, password: string, dataUrl: any) => {
+  const token = localStorage.getItem('token')
+  const url = import.meta.env.VITE_BACKEND + 'api/profile/updateimg'
+  axios
+    .post(
+      url,
+      { username: username, password: password, image: dataUrl },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    .then((response) => {
+      console.log('Image uploaded successfully:', response.data)
+    })
+    .catch((error) => {
+      console.error('Upload failed:', error)
+    })
+}
+
+export const getowntopics = async () => {
+  const token = localStorage.getItem('token')
+  const url = import.meta.env.VITE_BACKEND + 'api/profile/getowntopics'
+  try {
+    const response = await axios.post(
+      url,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    return response.data
+  } catch (error: any) {
+    console.error('Error:', error.response)
+    return error.response
   }
 }

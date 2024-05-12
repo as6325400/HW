@@ -21,4 +21,7 @@ Route::group([
     'prefix' => 'profile'
 ], function ($router) {
     Route::post('/userprofile', [UserController::class, 'userprofile'])->name('userprofile');
+    Route::post('/updateimg', [UserController::class, 'updateimg'])->name('updateimg');
+    Route::post('/getowntopics', [UserController::class, 'getowntopics'])->name('getowntopics');
 });
+

@@ -18,14 +18,13 @@
 import { ref, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Avatar, Button, Popover, Space } from 'ant-design-vue'
-import imageSrc from './images.jpeg' // 确保这里的文件名与你的图片文件名相匹配
 import { defineEmits, defineProps } from 'vue'
 import { Logout } from '@/functions/user'
 
 const isOpen = ref(false)
 
 watch(isOpen, (val) => {
-  if(!props.clickable){
+  if (!props.clickable) {
     isOpen.value = false
   }
 })
@@ -37,7 +36,7 @@ const props = defineProps({
   },
   imgpath: {
     type: String,
-    default: imageSrc
+    default: null
   },
   clickable: {
     type: Boolean,
