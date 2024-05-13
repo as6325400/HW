@@ -32,6 +32,7 @@ declare module 'vue' {
     ASubMenu: typeof import('ant-design-vue/es')['SubMenu']
     ATable: typeof import('ant-design-vue/es')['Table']
     ATypographyLink: typeof import('ant-design-vue/es')['TypographyLink']
+    ATypographyText: typeof import('ant-design-vue/es')['TypographyText']
     AUpload: typeof import('ant-design-vue/es')['Upload']
     CoverTitle: typeof import('./src/components/cover/CoverTitle.vue')['default']
     DynamicForm: typeof import('./src/components/cover/DynamicForm.vue')['default']

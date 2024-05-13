@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\VoteController;
  
 Route::group([
     'middleware' => 'api',
@@ -25,3 +26,13 @@ Route::group([
     Route::post('/getowntopics', [UserController::class, 'getowntopics'])->name('getowntopics');
 });
 
+
+Route::group([
+    'middleware' => 'api',
+    'prefix' => 'vote'
+], function ($router) {
+    Route::post('/createvote', [VoteController::class, 'createvote'])->name('createvote');
+    Route::post('/deletevote', [VoteController::class, 'deletevote'])->name('deletevote');
+    Route::post('/gettime', [VoteController::class, 'gettime'])->name('gettime');
+    Route::post('/getallvotes', [VoteController::class, 'getallvotes'])->name('getallvotes');
+});

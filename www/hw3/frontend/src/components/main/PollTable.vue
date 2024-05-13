@@ -20,6 +20,11 @@
         <div class="editable-row-operations">
           <span v-if="editableData[record.key]">
             <a-typography-link @click="save(record.key)">Save</a-typography-link>
+            <a-typography-text
+              @click="delete_item(record.key)"
+              class="text-red-600 mr-2 hover:text-red-800"
+              >Delete</a-typography-text
+            >
             <a-popconfirm title="Sure to cancel?" @confirm="cancel(record.key)">
               <a>Cancel</a>
             </a-popconfirm>
@@ -36,6 +41,7 @@
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash-es'
 import { defineProps, reactive, toRefs, defineExpose } from 'vue'
+import { CreateVote, DeleteVote, gettime } from '@/functions/vote'
 
 const pagination = reactive({
   pageSizeOptions: ['10', '20', '30', '50'],
@@ -83,15 +89,13 @@ const edit = (key: string) => {
 }
 
 function splitString(input: string): string[] {
-  // 使用正則表達式匹配未被反斜杠轉義的逗號，然後分割字符串
-  // 正則表達式解釋：匹配一個非反斜杠的或字符串開頭的位置後跟一個逗號
   return input
     .split(/(?<!\\),/)
-    .map((part) => part.replace(/\\,/g, ',')) // 將轉義的逗號換成普通逗號
-    .map((part) => part.trim()) // 去除每個元素前後的空白
+    .map((part) => part.replace(/\\,/g, ','))
+    .map((part) => part.trim())
 }
 
-const save = (key: string) => {
+const save = async (key: string) => {
   Object.assign(
     dataSource.find((item) => item.key === key),
     editableData[key]
@@ -104,8 +108,34 @@ const save = (key: string) => {
     alert('Please fill in all the fields')
     return
   }
+  const response = await CreateVote(item.Topics, item.title, splitString(item.option))
+  if (response.status === 487) {
+    alert('Please login')
+    window.location.href = '/login'
+    return
+  }
+  if (response.status === 488) {
+    alert('The vote has already existed')
+    return
+  }
+  console.log(response)
+  const time = await gettime(item.Topics, item.title)
+  dataSource.find((item) => item.key === key).Create_Time = time.data.time
   delete editableData[key]
 }
+
+const delete_item = async (key: string) => {
+  const item = dataSource.find((item) => item.key === key)
+  const response = await DeleteVote(item.Topics, item.title)
+  console.log(response)
+  if (response.status === 487) {
+    alert('Please login')
+    window.location.href = '/login'
+    return
+  }
+  dataSource.splice(dataSource.indexOf(item), 1)
+}
+
 const cancel = (key: string) => {
   delete editableData[key]
 }

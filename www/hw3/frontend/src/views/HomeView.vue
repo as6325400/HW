@@ -61,20 +61,19 @@ import InfoHeader from '@/components/main/HeaderComponent.vue'
 import UpdateComponent from '@/components/main/UpdateComponent.vue'
 import { onMounted, ref } from 'vue'
 import { fetchUserDataWithToken } from '@/functions/user'
+import { getAllVotes } from '@/functions/vote'
 import PollComponent from '@/components/main/PollComponent.vue'
 
 let username = ref('')
 let usernumber = ref('')
 let topicnumber = ref('')
 let imgpath = ref('')
+let polls = ref([])
 
 onMounted(async () => {
   const data = await fetchUserDataWithToken()
   console.log(data)
-  if (
-    (data.status === 401 && data.message === 'Unauthorized') ||
-    data.statusText === 'Unauthorized'
-  ) {
+  if (data.status === 487 || data.statusText === 'Unauthorized') {
     console.log('Unauthorized')
     window.location.href = '/login'
     return
@@ -83,6 +82,24 @@ onMounted(async () => {
   usernumber.value = data.people_num
   topicnumber.value = data.topic_num
   imgpath.value = import.meta.env.VITE_BACKEND + data.user.photo
+  const allVotes: Array = await getAllVotes()
+  for (let i = 0; i < allVotes.length; i++) {
+    let options = []
+    for (let j = 0; j < allVotes[i].options.length; j++) {
+      options.push({
+        id: allVotes[i].options[j].id,
+        text: allVotes[i].options[j].item_name,
+        votes: allVotes[i].options[j].vote_count
+      })
+      polls.value.push({
+        id: allVotes[i].id,
+        title: allVotes[i].title,
+        description: allVotes[i].description,
+        options: options
+      })
+    }
+  }
+  console.log(polls.value)
 })
 
 const collapsed = ref<boolean>(false)
@@ -92,37 +109,6 @@ const update_click = () => {
   isModalVisible.value = true
   console.log('update_click')
 }
-
-const polls = ref([
-  {
-    id: 1,
-    title: '問題一',
-    description: '描述一',
-    options: [
-      { id: 101, text: '選項 A', votes: 10 },
-      { id: 102, text: '選項 B', votes: 5 }
-    ]
-  },
-  {
-    id: 2,
-    title: '問題二',
-    description: '描述二',
-    options: [
-      { id: 201, text: '選項 C', votes: 3 },
-      { id: 202, text: '選項 D', votes: 7 }
-    ]
-  },
-  {
-    id: 3,
-    title: '問題二',
-    description: '描述二',
-    options: [
-      { id: 201, text: '選項 C', votes: 3 },
-      { id: 202, text: '選項 D', votes: 7 }
-    ]
-  }
-  // 更多投票模塊...
-])
 
 const vote = (pollId, optionId) => {
   const poll = polls.value.find((p) => p.id === pollId)
