@@ -36,4 +36,5 @@ Route::group([
     Route::post('/editvote', [VoteController::class, 'editvote'])->name('editvote');
     Route::post('/gettime', [VoteController::class, 'gettime'])->name('gettime');
     Route::post('/getallvotes', [VoteController::class, 'getallvotes'])->name('getallvotes');
+    Route::post('/getvote', [VoteController::class, 'getvote'])->name('getvote');
 });
