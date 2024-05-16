@@ -4,8 +4,8 @@
     <!-- 標題和內容介紹 -->
     <div class="mb-4 flex">
       <div>
-        <h1 class="text-lg font-bold">{{props.title}}</h1>
-        <p>{{props.description}}</p>
+        <h1 class="text-lg font-bold">{{ props.title }}</h1>
+        <p>{{ props.description }}</p>
       </div>
       <InfoHeader
         class="ml-auto"
@@ -32,6 +32,8 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
+import { getVote } from '@/functions/vote'
+import { number } from 'yup'
 
 const props = defineProps({
   username: {
@@ -53,13 +55,21 @@ const props = defineProps({
   options: {
     type: Array,
     value: []
+  },
+  topic_id: {
+    type: String,
+    value: null
+  },
+  user_option: {
+    type: Number,
+    value: null
   }
 })
 
 const options = ref([])
 
 onMounted(() => {
-  for(let i = 0; i < props.options.length; i++){
+  for (let i = 0; i < props.options.length; i++) {
     options.value.push({
       id: props.options[i].id,
       text: props.options[i].text,
@@ -67,14 +77,30 @@ onMounted(() => {
     })
   }
   console.log(props.imgpath)
+  console.log(props.user_option)
+  if (props.user_option !== null && props.user_option !== undefined) {
+    selected.value = props.user_option
+  }
 })
 
 const selected = ref(null)
 
-const vote = (optionId) => {
+const vote = async (optionId) => {
   const option = options.value.find((o) => o.id === optionId)
+  if (selected.value === optionId) {
+    selected.value = null
+    option.votes--
+    return
+  }
+  if (selected.value !== null) {
+    const selectedOption = options.value.find((o) => o.id === selected.value)
+    selectedOption.votes--
+  }
   option.votes++
   selected.value = optionId
+  console.log(props.topic_id, optionId, props.username)
+  const res = await getVote(props.topic_id, optionId, props.username)
+  // console.log()
 }
 
 const calculatePercentage = (votes) => {

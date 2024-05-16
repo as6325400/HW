@@ -43,7 +43,15 @@
           </a-carousel>
           <div class="polls-container mt-4">
             <div class="poll" v-for="(poll, index) in polls" :key="index">
-              <PollComponent :username="poll.ownername" :imgpath="poll.ownerphoto" :title="poll.title" :description="poll.description" :options="poll.options"/>
+              <PollComponent
+                :username="poll.ownername"
+                :imgpath="poll.ownerphoto"
+                :title="poll.title"
+                :description="poll.description"
+                :options="poll.options"
+                :topic_id="poll.id"
+                :user_option="poll.user_option"
+              />
             </div>
           </div>
         </div>
@@ -87,6 +95,7 @@ onMounted(async () => {
   const allVotes = res.data.topics
   console.log(allVotes)
   for (let i = 0; i < allVotes.length; i++) {
+    let user_option = null
     let options = []
     for (let j = 0; j < allVotes[i].options.length; j++) {
       options.push({
@@ -94,15 +103,22 @@ onMounted(async () => {
         text: allVotes[i].options[j].item_name,
         votes: allVotes[i].options[j].vote_count
       })
+      console.log(allVotes[i].options[j].voter.username, username.value)
+      for (let k = 0; k < allVotes[i].options[j].voter.length; k++) {
+        if (allVotes[i].options[j].voter[k].username == username.value) {
+          user_option = allVotes[i].options[j].id
+        }
+      }
     }
     polls.value.push({
-        id: allVotes[i].id,
-        title: allVotes[i].topic_name,
-        description: allVotes[i].title,
-        options: options,
-        ownername: allVotes[i].ownername,
-        ownerphoto: import.meta.env.VITE_BACKEND + allVotes[i].ownerpath
-      })
+      id: Number(allVotes[i].id),
+      title: allVotes[i].topic_name,
+      description: allVotes[i].title,
+      options: options,
+      ownername: allVotes[i].ownername,
+      ownerphoto: import.meta.env.VITE_BACKEND + allVotes[i].ownerpath,
+      user_option: user_option
+    })
     // console.log(polls.value)
   }
   console.log(polls.value)
