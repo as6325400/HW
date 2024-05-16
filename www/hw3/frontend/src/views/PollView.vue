@@ -36,7 +36,7 @@
           <a-breadcrumb-item>{{ username }}</a-breadcrumb-item>
         </a-breadcrumb>
         <div class="flex">
-          <a-button type="primary" class="mx-4" @click="addEmptyRow">Primary Button</a-button>
+          <a-button type="primary" class="mx-4" @click="addEmptyRow">Add Poll</a-button>
           <a-input-search
             placeholder="Search"
             v-model:value="searchQuery"

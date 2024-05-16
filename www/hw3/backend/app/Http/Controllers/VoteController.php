@@ -127,7 +127,15 @@ class VoteController extends Controller
     }
 
     public function getvote(Request $request)
-    {
+    {   
+        $token = $request->header('Authorization');
+        if (Str::startsWith($token, 'Bearer ')) {
+            $token = Str::substr($token, 7);
+        }
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 487);
+        }
         $topic_id = $request->input('topic_id');
         $option_id = $request->input('option_id');
         $username = $request->input('username');
