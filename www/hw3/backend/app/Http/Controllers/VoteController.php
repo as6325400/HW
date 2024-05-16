@@ -41,6 +41,45 @@ class VoteController extends Controller
         ], 200);
     }
 
+    public function editvote(Request $request)
+    {   
+        $token = $request->header('Authorization');
+        if (Str::startsWith($token, 'Bearer ')) {
+            $token = Str::substr($token, 7);
+        }
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 487);
+        }
+        $topic = $request->input('topic');
+        $title = $request->input('title');
+        $options = $request->input('options');
+        $topic_id = DB::table('topics')->where('topic_name', $topic)->where('title', $title)->value('id');
+        // 獲得當前 topic 和 title 下的所有選項
+       
+        $currentOptions = DB::table('poll_options')
+                            ->where('topic_id', $topic_id)
+                            ->pluck('item_name')
+                            ->toArray();
+        // 新增不存在的選項
+        foreach ($options as $option) {
+            if (!in_array($option, $currentOptions)) {
+                DB::table('poll_options')->insert([
+                    'topic_id' => $topic_id,
+                    'item_name' => $option
+                ]);
+            }
+        }
+    
+        // 刪除不在新 options 陣列中的選項
+        if (!empty($currentOptions)) {
+            DB::table('poll_options')
+                ->where('topic_id', $topic_id)
+                ->whereNotIn('item_name', $options)
+                ->delete();
+        }
+    }
+
     public function deletevote(Request $request)
     {
         $token = $request->header('Authorization');
@@ -70,6 +109,10 @@ class VoteController extends Controller
         return response()->json(['topic_name' => $topic, 'title' => $title,
             'time' => $time
         ], 200);
+    }
+
+    public function getvotenums(Request $request){
+        
     }
 
     public function getallvotes(Request $request)

@@ -33,6 +33,7 @@ Route::group([
 ], function ($router) {
     Route::post('/createvote', [VoteController::class, 'createvote'])->name('createvote');
     Route::post('/deletevote', [VoteController::class, 'deletevote'])->name('deletevote');
+    Route::post('/editvote', [VoteController::class, 'editvote'])->name('editvote');
     Route::post('/gettime', [VoteController::class, 'gettime'])->name('gettime');
     Route::post('/getallvotes', [VoteController::class, 'getallvotes'])->name('getallvotes');
 });

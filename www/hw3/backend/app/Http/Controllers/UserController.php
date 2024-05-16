@@ -32,13 +32,12 @@ class UserController extends Controller
         if (!$user) {
             return response()->json(['error' => 'Unauthorized'], 487);
         }
-
-        $this->validate($request, [
-            'image' => 'required', // 确保接收到图片数据
-            'username' => 'required',
-            'password' => 'required'
-        ]);
-
+        // $this->validate($request, [
+        //     'image' => 'required', // 确保接收到图片数据
+        //     'username' => 'required',
+        //     'password' => 'required'
+        // ]);
+        // return '48763';
         $mail = DB::table('users')->where('username', $request->username)->value('email');
         $credentials = ['email' => $mail, 'password' => $request->password];
         if (!auth()->attempt($credentials)) {
