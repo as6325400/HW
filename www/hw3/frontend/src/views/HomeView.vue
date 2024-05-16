@@ -43,7 +43,7 @@
           </a-carousel>
           <div class="polls-container mt-4">
             <div class="poll" v-for="(poll, index) in polls" :key="index">
-              <PollComponent :username="username" />
+              <PollComponent :username="poll.ownername" :imgpath="poll.ownerphoto" :title="poll.title" :description="poll.description" :options="poll.options"/>
             </div>
           </div>
         </div>
@@ -82,7 +82,10 @@ onMounted(async () => {
   usernumber.value = data.people_num
   topicnumber.value = data.topic_num
   imgpath.value = import.meta.env.VITE_BACKEND + data.user.photo
-  const allVotes: Array = await getAllVotes()
+  console.log('imgpath', imgpath.value)
+  const res: Array = await getAllVotes()
+  const allVotes = res.data.topics
+  console.log(allVotes)
   for (let i = 0; i < allVotes.length; i++) {
     let options = []
     for (let j = 0; j < allVotes[i].options.length; j++) {
@@ -91,13 +94,16 @@ onMounted(async () => {
         text: allVotes[i].options[j].item_name,
         votes: allVotes[i].options[j].vote_count
       })
-      polls.value.push({
-        id: allVotes[i].id,
-        title: allVotes[i].title,
-        description: allVotes[i].description,
-        options: options
-      })
     }
+    polls.value.push({
+        id: allVotes[i].id,
+        title: allVotes[i].topic_name,
+        description: allVotes[i].title,
+        options: options,
+        ownername: allVotes[i].ownername,
+        ownerphoto: import.meta.env.VITE_BACKEND + allVotes[i].ownerpath
+      })
+    // console.log(polls.value)
   }
   console.log(polls.value)
 })

@@ -92,7 +92,8 @@ onMounted(async () => {
       Topics: poll_data.topics[i].topic_name,
       title: poll_data.topics[i].title,
       Create_Time: poll_data.topics[i].time,
-      option: poll_data.topics[i].options.join(', ')
+      option: poll_data.topics[i].options.join(', '),
+      type: 'old'
     })
   }
   console.log(ownpolldata.value)
@@ -110,7 +111,8 @@ const addEmptyRow = () => {
     Topics: '',
     title: '',
     Create_Time: '',
-    option: ''
+    option: '',
+    type: 'new'
   })
   table.value.edit(newkey)
 }

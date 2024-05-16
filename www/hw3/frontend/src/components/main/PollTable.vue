@@ -41,7 +41,7 @@
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash-es'
 import { defineProps, reactive, toRefs, defineExpose } from 'vue'
-import { CreateVote, DeleteVote, gettime } from '@/functions/vote'
+import { CreateVote, DeleteVote, gettime, EditVote } from '@/functions/vote'
 
 const pagination = reactive({
   pageSizeOptions: ['10', '20', '30', '50'],
@@ -101,14 +101,13 @@ const save = async (key: string) => {
     editableData[key]
   )
   const item = dataSource.find((item) => item.key === key)
-  console.log(item)
-  console.log(item.Topics)
-  console.log(splitString(item.option))
   if (item.Topics.trim() === '' || item.title.trim() === '' || item.option.trim() === '') {
     alert('Please fill in all the fields')
     return
   }
-  const response = await CreateVote(item.Topics, item.title, splitString(item.option))
+  let response = null;
+  if(item.type == 'new') response = await CreateVote(item.Topics, item.title, splitString(item.option))
+  else if(item.type == 'old') response = await EditVote(item.Topics, item.title, splitString(item.option))
   if (response.status === 487) {
     alert('Please login')
     window.location.href = '/login'

@@ -4,8 +4,8 @@
     <!-- 標題和內容介紹 -->
     <div class="mb-4 flex">
       <div>
-        <h1 class="text-lg font-bold">問題投票</h1>
-        <p>請選擇下列選項進行投票，您的選擇對我們非常重要。</p>
+        <h1 class="text-lg font-bold">{{props.title}}</h1>
+        <p>{{props.description}}</p>
       </div>
       <InfoHeader
         class="ml-auto"
@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
 
 const props = defineProps({
@@ -40,7 +40,7 @@ const props = defineProps({
   },
   imgpath: {
     type: String,
-    value: 'default'
+    value: null
   },
   description: {
     type: String,
@@ -56,11 +56,19 @@ const props = defineProps({
   }
 })
 
-const options = ref([
-  { id: 1, text: '你喜歡的不是綠茶婊', votes: 3 },
-  { id: 2, text: '增知識面的論壇', votes: 1 },
-  { id: 3, text: '車人戶、日曜、講、陳天橋', votes: 0 }
-])
+const options = ref([])
+
+onMounted(() => {
+  for(let i = 0; i < props.options.length; i++){
+    options.value.push({
+      id: props.options[i].id,
+      text: props.options[i].text,
+      votes: props.options[i].votes
+    })
+  }
+  console.log(props.imgpath)
+})
+
 const selected = ref(null)
 
 const vote = (optionId) => {
