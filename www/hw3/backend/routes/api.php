@@ -24,6 +24,7 @@ Route::group([
     Route::post('/userprofile', [UserController::class, 'userprofile'])->name('userprofile');
     Route::post('/updateimg', [UserController::class, 'updateimg'])->name('updateimg');
     Route::post('/getowntopics', [UserController::class, 'getowntopics'])->name('getowntopics');
+    Route::post('/updatepassword', [UserController::class, 'updatepassword'])->name('updatepassword');
 });
 
 

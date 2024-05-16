@@ -14,10 +14,10 @@
           :before-upload="beforeUpload"
           @change="handleChange"
         >
-          <!-- <div v-if="props.imgpath" class="avatar-wrapper">
+          <div v-if="props.imgpath" class="avatar-wrapper">
             <a-avatar :src="props.imgpath" :size="192" />
-          </div> -->
-          <div class="avatar-uploader-trigger">
+          </div>
+          <div v-else class="avatar-uploader-trigger">
             <a-avatar class="h-full w-full absolute" :size="192">
               <template #icon><UserOutlined /></template>
             </a-avatar>
@@ -52,7 +52,7 @@
         <a-form-item label="New Password">
           <a-input
             type="password"
-            v-model="profile.newpassword"
+            v-model:value="profile.newPassword"
             placeholder="New Password"
             autocomplete="new-password"
           />
@@ -60,7 +60,7 @@
         <a-form-item label="Confirm New Password">
           <a-input
             type="password"
-            v-model="profile.confirmNewPassword"
+            v-model:value="profile.confirmNewPassword"
             placeholder="Confirm New Password"
             autocomplete="new-password"
           />
@@ -68,7 +68,7 @@
         <a-form-item label="Current Password">
           <a-input
             type="password"
-            v-model="profile.oldPassword"
+            v-model:value="profile.oldPassword"
             placeholder="Current Password"
             autocomplete="new-password"
           />
@@ -81,7 +81,7 @@
 import { ref, reactive, watch } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Modal, Form, Input, Upload, Avatar } from 'ant-design-vue'
-import { uploadimg } from '@/functions/user'
+import { uploadimg, updatePassword } from '@/functions/user'
 
 const isModalVisible = ref(false)
 const showPhoto = ref(true)
@@ -149,6 +149,9 @@ async function handleOk() {
     )
     console.log('Uploading photo...', response)
   } else {
+    console.log('profile.value', profile.value
+
+    )
     if (!profile.value.username) {
       alert('Please enter a username')
       return
@@ -170,6 +173,11 @@ async function handleOk() {
       return
     }
     console.log('Changing password...')
+    const response = await updatePassword(
+      profile.value.username,
+      profile.value.oldPassword,
+      profile.value.newPassword
+    )
   }
   // console.log('Submitted:', profile.value)
   isModalVisible.value = false

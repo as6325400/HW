@@ -134,3 +134,25 @@ export const getowntopics = async () => {
     return error.response
   }
 }
+
+export const updatePassword = async (username: string, password: string, newpassword: string) => {
+  console.log(password, newpassword)
+  const token = localStorage.getItem('token')
+  const url = import.meta.env.VITE_BACKEND + 'api/profile/updatepassword'
+  try {
+    const response = await axios.post(
+      url,
+      { oldpassword: password, newpassword: newpassword},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    console.log('response:', response)
+    return response.data
+  } catch (error: any) {
+    console.error('Error:', error.response)
+    return error.response
+  }
+}
