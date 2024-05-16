@@ -8,6 +8,11 @@ const router = createRouter({
   routes: [
     {
       path: '/',
+      name: 'index',
+      component: LoginView
+    },
+    {
+      path: '/register',
       name: 'register',
       component: RegisterView
     },

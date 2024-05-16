@@ -38,8 +38,8 @@
         <div class="flex">
           <a-button type="primary" class="mx-4" @click="addEmptyRow">Primary Button</a-button>
           <a-input-search
-            placeholder="搜索項目"
-            v-model="searchQuery"
+            placeholder="Search"
+            v-model:value="searchQuery"
             style="margin-bottom: 16px"
           />
         </div>
@@ -47,7 +47,7 @@
         <PollTable ref="table" :initialData="ownpolldata" />
       </a-layout-content>
       <a-layout-footer style="text-align: center">
-        Design ©2024 Created by Ant UED
+        Design ©2024 Created by as6325400
       </a-layout-footer>
     </a-layout>
   </a-layout>
@@ -55,22 +55,36 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import PollTable from '@/components/main/PollTable.vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
 import UpdateComponent from '@/components/main/UpdateComponent.vue'
 import { fetchUserDataWithToken } from '@/functions/user'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { getowntopics } from '@/functions/user'
+import { cloneDeep } from 'lodash-es';
 const pollTableRef = ref(null)
 const selectedKeys = ref(['4'])
-const searchQuery = ref('')
+const searchQuery = ref('dawdwad')
 const username = ref('Username')
 const collapsed = ref(false)
 const table = ref(null)
 const imgpath = ref(null)
 const isModalVisible = ref(false)
 let ownpolldata = ref([])
+let originpolldata = ref([])
+
+watch(searchQuery, (val) => {
+  if(val === '') {
+    ownpolldata.value = originpolldata.value
+    return
+  }
+  else{
+    ownpolldata.value = originpolldata.value.filter((item) => {
+      return item.title.includes(val) || item.Topics.includes(val)
+    })
+  }
+})
 
 onMounted(async () => {
   const data = await fetchUserDataWithToken()
@@ -96,7 +110,7 @@ onMounted(async () => {
       type: 'old'
     })
   }
-  console.log(ownpolldata.value)
+  originpolldata = ref(cloneDeep(ownpolldata.value))
 })
 
 const update_click = () => {

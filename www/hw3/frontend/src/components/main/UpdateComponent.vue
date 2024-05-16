@@ -14,19 +14,21 @@
           :before-upload="beforeUpload"
           @change="handleChange"
         >
-          <div v-if="props.imgpath" class="avatar-wrapper">
+          <!-- <div v-if="props.imgpath" class="avatar-wrapper">
             <a-avatar :src="props.imgpath" :size="192" />
-          </div>
-          <div v-else class="avatar-uploader-trigger">
+          </div> -->
+          <div class="avatar-uploader-trigger">
             <a-avatar class="h-full w-full absolute" :size="192">
               <template #icon><UserOutlined /></template>
             </a-avatar>
-            <span class="upload-trigger absolute z-2">Click to upload</span>
+          </div>
+          <div class="h-full w-full upload-trigger absolute top-0 left-0 z-2 flex justify-center items-center">
+            <span>Click to upload</span>
           </div>
         </a-upload>
       </div>
       <a-segmented v-model:value="value" block :options="data" />
-      <div v-if="showPhoto">
+      <div v-show="showPhoto">
         <a-form-item label="Username">
           <a-input
             v-model:value="profile.username"
@@ -43,31 +45,31 @@
           />
         </a-form-item>
       </div>
-      <div v-else>
+      <div v-show="!showPhoto">
         <a-form-item label="Username">
-          <a-input v-model="profile.username" placeholder="Username" autocomplete="new-password" />
+          <a-input v-model:value="profile.username" placeholder="Username" autocomplete="new-password" />
         </a-form-item>
         <a-form-item label="New Password">
           <a-input
             type="password"
-            v-model="profile.password"
-            placeholder="Password"
+            v-model="profile.newpassword"
+            placeholder="New Password"
             autocomplete="new-password"
           />
         </a-form-item>
         <a-form-item label="Confirm New Password">
           <a-input
             type="password"
-            v-model="profile.confirmPassword"
-            placeholder="Confirm Password"
+            v-model="profile.confirmNewPassword"
+            placeholder="Confirm New Password"
             autocomplete="new-password"
           />
         </a-form-item>
         <a-form-item label="Current Password">
           <a-input
             type="password"
-            v-model="profile.password"
-            placeholder="Password"
+            v-model="profile.oldPassword"
+            placeholder="Current Password"
             autocomplete="new-password"
           />
         </a-form-item>
@@ -86,7 +88,10 @@ const showPhoto = ref(true)
 const profile = ref({
   username: '',
   password: '',
-  confirmPassword: ''
+  confirmPassword: '',
+  oldPassword: '',
+  newPassword: '',
+  confirmNewPassword: '',
 })
 
 const props = defineProps({
@@ -144,7 +149,27 @@ async function handleOk() {
     )
     console.log('Uploading photo...', response)
   } else {
-    console
+    if (!profile.value.username) {
+      alert('Please enter a username')
+      return
+    }
+    if (!profile.value.oldPassword) {
+      alert('Please enter your current password')
+      return
+    }
+    if (!profile.value.newPassword) {
+      alert('Please enter a new password')
+      return
+    }
+    if (!profile.value.confirmNewPassword) {
+      alert('Please confirm your new password')
+      return
+    }
+    if (profile.value.newPassword !== profile.value.confirmNewPassword) {
+      alert('New password and confirm password do not match')
+      return
+    }
+    console.log('Changing password...')
   }
   // console.log('Submitted:', profile.value)
   isModalVisible.value = false
@@ -227,6 +252,7 @@ function handleChange({ file }) {
 .upload-trigger {
   opacity: 0; /* 默认不显示 */
   transition: opacity 0.3s ease; /* 平滑过渡效果 */
+  background-color: rgba(255, 255, 255, 0.5);
 }
 .avatar-uploader:hover .upload-trigger {
   opacity: 1; /* 悬停时显示 */

@@ -40,7 +40,7 @@
 
 <script lang="ts" setup>
 import { cloneDeep } from 'lodash-es'
-import { defineProps, reactive, toRefs, defineExpose } from 'vue'
+import { defineProps, reactive, toRefs, defineExpose, watch } from 'vue'
 import { CreateVote, DeleteVote, gettime, EditVote } from '@/functions/vote'
 
 const pagination = reactive({
@@ -82,6 +82,15 @@ const columns = [
 
 const dataSource = reactive(props.initialData)
 const editableData: UnwrapRef<Record<string, DataItem>> = reactive({})
+
+watch(
+  () => props.initialData,
+  (newData) => {
+    dataSource.splice(0, dataSource.length, ...newData)
+  },
+  { immediate: true, deep: true }
+)
+
 
 const edit = (key: string) => {
   console.log(key)
