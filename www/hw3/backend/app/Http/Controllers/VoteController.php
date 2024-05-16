@@ -138,7 +138,7 @@ class VoteController extends Controller
         }
         $topic_id = $request->input('topic_id');
         $option_id = $request->input('option_id');
-        $username = $request->input('username');
+        $username =  $user['username'];
         if(DB::table('vote_record')->where('topic_id', $topic_id)->where('username', $username)->exists()){
             $old_option_id = DB::table('vote_record')->where('topic_id', $topic_id)->where('username', $username)->value('option_id');
             DB::table('vote_record')->where('topic_id', $topic_id)->where('username', $username)->update([
