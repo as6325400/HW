@@ -127,6 +127,8 @@ watch(
   }
 )
 
+const emit = defineEmits(['handleOk', 'handleCancel'])
+
 async function handleOk() {
   if (showPhoto.value) {
     if (!profile.value.photo) {
@@ -179,12 +181,15 @@ async function handleOk() {
       profile.value.newPassword
     )
   }
-  // console.log('Submitted:', profile.value)
   isModalVisible.value = false
+  console.log(isModalVisible.value)
+  window.location.href = '/home'
 }
 
 function handleCancel() {
+  console.log(isModalVisible.value)
   isModalVisible.value = false
+  window.location.href = '/home'
 }
 
 function beforeUpload(file) {
