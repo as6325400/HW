@@ -5,7 +5,7 @@
       :fields="fields"
       buttonText="Login"
       linkText="還未註冊?點此建立"
-      linkTo="/"
+      linkTo="/register"
       :linkClass="errorMsgClass"
       @button-click="loginHandler"
     >

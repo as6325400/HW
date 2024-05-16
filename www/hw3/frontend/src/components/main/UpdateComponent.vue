@@ -130,16 +130,16 @@ watch(
 async function handleOk() {
   if (showPhoto.value) {
     if (!profile.value.photo) {
-      console.log('Please upload a photo')
+      alert('Please upload a photo')
       return
     }
     if (!profile.value.username) {
       console.log(profile.value.username)
-      console.log('Please enter a username')
+      alert('Please enter a username')
       return
     }
     if (!profile.value.password) {
-      console.log('Please enter a password')
+      alert('Please enter a password')
       return
     }
     const response = await uploadimg(

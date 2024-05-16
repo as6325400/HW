@@ -65,7 +65,7 @@ import { getowntopics } from '@/functions/user'
 import { cloneDeep } from 'lodash-es';
 const pollTableRef = ref(null)
 const selectedKeys = ref(['4'])
-const searchQuery = ref('dawdwad')
+const searchQuery = ref('')
 const username = ref('Username')
 const collapsed = ref(false)
 const table = ref(null)

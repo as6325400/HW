@@ -91,5 +91,7 @@ const RegisterHandler = () => {
       errorMsg.value = 'Register failed'
     }
   })
+
+  window.location.href = '/login'
 }
 </script>
