@@ -142,7 +142,7 @@ export const updatePassword = async (username: string, password: string, newpass
   try {
     const response = await axios.post(
       url,
-      { oldpassword: password, newpassword: newpassword},
+      { newusername: username, oldpassword: password, newpassword: newpassword},
       {
         headers: {
           Authorization: `Bearer ${token}`
