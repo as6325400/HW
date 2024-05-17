@@ -13,6 +13,7 @@
           :show-upload-list="false"
           :before-upload="beforeUpload"
           @change="handleChange"
+          :disabled="!showPhoto"  
         >
           <div v-if="props.imgpath" class="avatar-wrapper">
             <a-avatar :src="props.imgpath" :size="192" />
@@ -22,7 +23,8 @@
               <template #icon><UserOutlined /></template>
             </a-avatar>
           </div>
-          <div class="h-full w-full upload-trigger absolute top-0 left-0 z-2 flex justify-center items-center">
+          <div class="h-full w-full upload-trigger absolute top-0 left-0 z-2 flex justify-center items-center"
+          v-show="showPhoto">
             <span>Click to upload</span>
           </div>
         </a-upload>
@@ -34,6 +36,7 @@
             v-model:value="profile.username"
             placeholder="Username"
             autocomplete="new-password"
+            :disabled="true"
           />
         </a-form-item>
         <a-form-item label="Password">
@@ -269,5 +272,10 @@ function handleChange({ file }) {
 }
 .avatar-uploader:hover .upload-trigger {
   opacity: 1; /* 悬停时显示 */
+}
+
+.disabled-upload .avatar-uploader-trigger:hover {
+  opacity: 1; /* 當禁用時，hover 不改變透明度 */
+  cursor: not-allowed; /* 可選，顯示禁用狀態 */
 }
 </style>

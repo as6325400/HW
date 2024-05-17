@@ -20,7 +20,7 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div class="flex">
+        <div class="flex bg-[#002B5B] text-white text-center">
           <InfoHeader
             class="ml-auto"
             @update-click="update_click"

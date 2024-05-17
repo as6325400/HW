@@ -21,7 +21,7 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div class="flex">
+        <div class="flex bg-[#002B5B] text-white text-center">
           <InfoHeader
             class="ml-auto"
             @update-click="update_click"
@@ -61,7 +61,7 @@
       </a-layout-footer>
     </a-layout>
   </a-layout>
-  <UpdateComponent v-model:open="isModalVisible" :imgpath="imgpath" :username="username" />
+  <UpdateComponent v-model:open="isModalVisible" :imgpath="imgpath" :username="username"/>
 </template>
 <script lang="ts" setup>
 import { UserOutlined } from '@ant-design/icons-vue'
@@ -111,7 +111,7 @@ onMounted(async () => {
       }
     }
     polls.value.push({
-      id: Number(allVotes[i].id),
+      id: (allVotes[i].id).toString(),
       title: allVotes[i].topic_name,
       description: allVotes[i].title,
       options: options,
@@ -175,12 +175,17 @@ const isSelected = (pollId, optionId) => {
 
 :deep(.slick-slide) {
   text-align: center;
-  height: 160px;
-  line-height: 160px;
-  background: #d3d3d3;
+  height: 200px; /* 調整高度 */
+  line-height: 200px; /* 調整行高 */
+  background: linear-gradient(135deg, #003366, #66CCFF);
+  color: #fff; /* 文字顏色 */
   overflow: hidden;
+  border-radius: 10px; /* 圓角邊框 */
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 陰影效果 */
 }
-:deep(.slick-slide h3) {
-  color: #fff;
+
+:deep(.slick-slide div) {
+  font-size: 24px; /* 調整標題字體大小 */
 }
+
 </style>
