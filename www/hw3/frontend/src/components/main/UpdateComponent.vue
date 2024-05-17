@@ -81,7 +81,7 @@
   </a-modal>
 </template>
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Modal, Form, Input, Upload, Avatar } from 'ant-design-vue'
 import { uploadimg, updatePassword } from '@/functions/user'
@@ -95,6 +95,10 @@ const profile = ref({
   oldPassword: '',
   newPassword: '',
   confirmNewPassword: '',
+})
+
+onMounted(() => {
+  console.log(props.imgpath)
 })
 
 const props = defineProps({
@@ -184,15 +188,11 @@ async function handleOk() {
       profile.value.newPassword
     )
   }
-  isModalVisible.value = false
-  console.log(isModalVisible.value)
   window.location.href = '/home'
 }
 
 function handleCancel() {
-  console.log(isModalVisible.value)
   isModalVisible.value = false
-  window.location.href = '/home'
 }
 
 function beforeUpload(file) {

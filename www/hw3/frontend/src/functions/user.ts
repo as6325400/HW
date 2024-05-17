@@ -97,22 +97,20 @@ export const fetchUserDataWithToken = async () => {
 export const uploadimg = async (username: string, password: string, dataUrl: any) => {
   const token = localStorage.getItem('token')
   const url = import.meta.env.VITE_BACKEND + 'api/profile/updateimg'
-  axios
-    .post(
+  try {
+    const response = await axios.post(
       url,
       { username: username, password: password, image: dataUrl },
       {
         headers: {
           Authorization: `Bearer ${token}`
         }
-      }
-    )
-    .then((response) => {
-      console.log('Image uploaded successfully:', response.data)
-    })
-    .catch((error) => {
-      console.error('Upload failed:', error)
-    })
+      })
+    return response.data
+  }catch (error: any) {
+    console.error('Error:', error.response)
+    return error.response
+  }
 }
 
 export const getowntopics = async () => {

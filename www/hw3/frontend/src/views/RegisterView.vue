@@ -82,7 +82,7 @@ const RegisterHandler = () => {
   const hasUpperCase = /[A-Z]/.test(str);
   const hasLowerCase = /[a-z]/.test(str);
   const hasNumber = /\d/.test(str);
-  const isLongEnough = str.length > 6;
+  const isLongEnough = str.length >= 6;
 
   let arr = [0, 0, 0, 0]
   let errorMsg_arr = [
@@ -121,11 +121,12 @@ const RegisterHandler = () => {
     if (res.status === 201) {
       errorMsgClass.value = 'text-green-500'
       errorMsg.value = 'Register success'
+      window.location.href = '/login'
     } else {
       errorMsg.value = 'Register failed'
+      console.log(res)
     }
   })
 
-  window.location.href = '/login'
 }
 </script>

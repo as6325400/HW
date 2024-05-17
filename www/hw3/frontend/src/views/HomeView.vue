@@ -75,7 +75,7 @@ import PollComponent from '@/components/main/PollComponent.vue'
 let username = ref('')
 let usernumber = ref('')
 let topicnumber = ref('')
-let imgpath = ref('')
+let imgpath = ref(null)
 let polls = ref([])
 
 onMounted(async () => {
@@ -89,7 +89,10 @@ onMounted(async () => {
   username.value = data.user.username
   usernumber.value = data.people_num
   topicnumber.value = data.topic_num
-  imgpath.value = import.meta.env.VITE_BACKEND + data.user.photo
+  if (data.user.photo == null) {
+    imgpath.value = null
+  } 
+  else imgpath.value = import.meta.env.VITE_BACKEND + data.user.photo
   console.log('imgpath', imgpath.value)
   const res: Array = await getAllVotes()
   const allVotes = res.data.topics

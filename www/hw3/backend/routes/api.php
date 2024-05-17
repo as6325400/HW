@@ -15,6 +15,7 @@ Route::group([
     Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:api')->name('logout');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('auth:api')->name('refresh');
     Route::post('/me', [AuthController::class, 'me'])->middleware('auth:api')->name('me');
+    Route::get('/google_oauth', [AuthController::class, 'google_oauth'])->name('google_oauth');
 });
 
 Route::group([
