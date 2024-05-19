@@ -142,6 +142,7 @@ const delete_item = async (key: string) => {
     return
   }
   dataSource.splice(dataSource.indexOf(item), 1)
+  window.location.reload()
 }
 
 const cancel = (key: string) => {
