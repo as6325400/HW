@@ -8,51 +8,65 @@
         <canvas id="election-chart"></canvas>
       </div>
     </foreignObject>
-    <foreignObject x="10" y="10" width="300" height="30" ref="yearSelect" class="hidden">
+    <foreignObject id="back-button" width="100" height="50" ref="backButton" class="hidden">
       <div xmlns="http://www.w3.org/1999/xhtml">
-        <select id="county-select" v-model="search_year">
-          <option value="" selected>選擇年份</option>
-          <option value="2024" selected>2024</option>
-          <option value="2020">2020</option>
-          <option value="2016">2016</option>
-        </select>
+        <button @click="goBack" style="background-color: gray; padding: 5px; border-radius: 5px;">返回上一頁</button>
       </div>
     </foreignObject>
   </svg>
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted } from 'vue'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import Chart from 'chart.js/auto'
-import taiwan_County  from '@/assets/taiwan-county.json'
+import { useRoute } from 'vue-router'
 import taiwan_Town from '@/assets/taiwan-town.json'
 import {getdata} from '@/functions/data'
 
-
 const taiwanCountry = ref([])
-const router = useRouter()
 let electionChart = null;
-const yearSelect = ref(null)
+const route = useRoute()
+let countyName = ""
 const svgElement = ref(null)
-const search_year = ref(2024)
+const backButton = ref(null)
 
-watch(() => search_year.value, async(value) => {
-  d3.select('g.counties').selectAll('path').remove();
-  d3.select('path.county-borders').selectAll('path').remove();
-  const electionData = await getdata('臺灣', value)
-  console.log(value)
-  draw(taiwanCountry.value, electionData)
-})
+const goBack = () => {
+  window.location.href = '/'
+}
+
+var centers = {
+  "基隆市": { center: [121.69, 25.11] },
+  "臺北市": { center: [121.56, 25.08] },
+  "新北市": { center: [121.64, 24.99] },
+  "桃園市": { center: [121.23, 24.86] },
+  "新竹市": { center: [120.95, 24.78] },
+  "新竹縣": { center: [121.17, 24.69] },
+  "苗栗縣": { center: [120.94, 24.51] },
+  "臺中市": { center: [120.95, 24.22] },
+  "彰化縣": { center: [120.45, 24.00] },
+  "南投縣": { center: [120.98, 23.84] },
+  "雲林縣": { center: [120.37, 23.66] },
+  "嘉義縣": { center: [120.54, 23.43] },
+  "嘉義市": { center: [120.45, 23.48] },
+  "臺南市": { center: [120.34, 23.15] },
+  "高雄市": { center: [120.58, 22.98] },
+  "屏東縣": { center: [120.63, 22.39] },
+  "臺東縣": { center: [121.18, 22.70] },
+  "花蓮縣": { center: [121.38, 23.74] },
+  "宜蘭縣": { center: [121.60, 24.55] },
+  "澎湖縣": { center: [119.50, 23.47] },
+  "金門縣": { center: [118.32, 24.45] },
+  "連江縣": { center: [120.21, 26.17] },
+};
 
 
 const draw = (mapData, electionData) => {
   const svg = d3.select('svg')
   const width = svg.node().clientWidth
   const height = svg.node().clientHeight
-  const projection = d3.geoMercator().center([120.75, 23.8]).scale(8000).translate([width / 2, height / 2])
+  const projection = d3.geoMercator().center(centers[countyName].center).scale(17000).translate([width / 2, height / 2])
   const path = d3.geoPath(projection)
 
   const colorScale = d3.scaleOrdinal()
@@ -63,16 +77,18 @@ const draw = (mapData, electionData) => {
     .domain([20, 25, 30, 35, 40, 45, 50])
     .range([0.3, 0.5, 0.7, 0.8, 0.9, 1.0, 1.2])
 
-
+  // console.log(topojson.feature(mapData, mapData.objects['TOWN_MOI_1080617']).features.filter(d => d.properties.COUNTYNAME === countyName))
   d3.select('g.counties')
     .selectAll('path')
-    .data(topojson.feature(mapData, mapData.objects['COUNTY_MOI_1080617']).features)
+    .data(topojson.feature(mapData, mapData.objects['TOWN_MOI_1080617']).features.filter(d => d.properties.COUNTYNAME === countyName))
     .enter()
     .append('path')
     .attr('d', path)
     .attr('fill', d => {
-      const countyName = d.properties.COUNTYNAME
-      const countyData = electionData.find(e => e.county_name === countyName)
+      console.log(d.properties)
+      const countyName = d.properties.TOWNNAME
+      console.log(electionData)
+      const countyData = electionData.find(e => e.township_name === countyName)
       const { candidate1_vote_rate, candidate2_vote_rate, candidate3_vote_rate } = countyData;
       const voteRates = [
           { party: 'party1', rate: candidate1_vote_rate },
@@ -90,17 +106,12 @@ const draw = (mapData, electionData) => {
       }
       return 'gray'
     })
-    .on('click', (event, d) => {
-      const countyName = d.properties.COUNTYNAME;
-      console.log(countyName)
-      let year = search_year.value.toString()
-      router.push({ name: 'town', params: { countyName, year} });
-    })
     .on('mouseover', (event, d) => {
-      const countyName = d.properties.COUNTYNAME;
+      console.log(d)
+      const countyName = d.properties.TOWNNAME;
       d3.select('#county-name').text(countyName);
-
-      const countyData = electionData.find(e => e.county_name === countyName);
+      console.log(electionData)
+      const countyData = electionData.find(e => e.township_name === countyName);
       if (countyData) {
         showChart(countyData);
       }
@@ -113,7 +124,7 @@ const draw = (mapData, electionData) => {
     });
 
   d3.select('path.county-borders')
-    .attr('d', path(topojson.mesh(mapData, mapData.objects['COUNTY_MOI_1080617'])))
+    .attr('d', path(topojson.mesh(mapData, mapData.objects['TOWN_MOI_1080617'], (a, b) => a.properties.COUNTYNAME === countyName && b.properties.COUNTYNAME === countyName)))
 }
 
 const showChart = (countyData) => {
@@ -167,17 +178,18 @@ const showChart = (countyData) => {
 
 
 onMounted(async() => {
-  taiwanCountry.value = taiwan_County;
-  const electionData = await getdata('臺灣', search_year.value)
+  countyName = route.params.countyName
+  let year = route.params.year
+  taiwanCountry.value = taiwan_Town;
+  const electionData = await getdata(countyName, year)
   draw(taiwanCountry.value, electionData)
 
   const svg = svgElement.value;
+  const backButtonElement = backButton.value;
   const svgWidth = svg.clientWidth;
   const svgHeight = svg.clientHeight;
-  const select_year = yearSelect.value;
-  select_year.classList.remove('hidden');
-  select_year.setAttribute('x', svgWidth - 150); // 調整 x 坐標，使按鈕至右
-  select_year.setAttribute('y', 20); // 調整 y 坐標，使按鈕至下
-  console.log(select_year)
+  backButtonElement.classList.remove('hidden');
+  backButtonElement.setAttribute('x', svgWidth / 2 - 50); // 調整 x 坐標，使按鈕居中
+  backButtonElement.setAttribute('y', svgHeight - 60); // 調整 y 坐標，使按鈕位於底部
 })
 </script>

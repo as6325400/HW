@@ -4,5 +4,17 @@
 
 html, body, #app
 {
-  @apply h-full m-0 p-0;
+  @apply h-full w-full m-0 p-0 bg-gray-400;
+}
+
+.counties {
+  @apply fill-[#33474e];
+}
+
+.counties :hover {
+  @apply fill-[#7f9ca7] transition duration-500;
+}
+
+.county-borders {
+  @apply fill-none stroke-black stroke-[0.5px];
 }

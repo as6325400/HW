@@ -13,6 +13,11 @@ const router = createRouter({
       path: '/main',
       name: 'main',
       component: MainView 
+    },
+    {
+      path: '/:countyName/:year',
+      name: 'town',
+      component: () => import('../views/TownshipView.vue')
     }
   ]
 })
