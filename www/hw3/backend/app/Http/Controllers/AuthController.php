@@ -19,7 +19,7 @@ class AuthController extends Controller
         $validator = Validator::make(request()->all(), [
             'username' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed|min:8',
+            'password' => 'required|confirmed|min:6',
         ]);
   
         if($validator->fails()){
@@ -98,5 +98,10 @@ class AuthController extends Controller
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60
         ]);
+    }
+
+    public function google_oauth(Request $request)
+    {
+        
     }
 }

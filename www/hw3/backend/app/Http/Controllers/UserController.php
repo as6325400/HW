@@ -68,5 +68,21 @@ class UserController extends Controller
         }
         return response()->json(['topics' => $topics], 200);
     }
+
+    public function updatepassword(Request $request)
+    {   
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 487);
+        }
+        $newusername = $request->newusername;
+        $credentials = ['email' => $user->email, 'password' => $request->oldpassword];
+        if (!auth()->attempt($credentials)) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        DB::table('users')->where('email', $user->email)->update(['username' => $newusername]);
+        DB::table('users')->where('email', $user->email)->update(['password' => bcrypt($request->newpassword)]);
+        return response()->json(['status' => 'success'], 200);
+    }
 }
 

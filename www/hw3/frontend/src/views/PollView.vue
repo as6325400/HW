@@ -20,7 +20,7 @@
     </a-layout-sider>
     <a-layout>
       <a-layout-header style="background: #fff; padding: 0">
-        <div class="flex">
+        <div class="flex bg-[#002B5B] text-white text-center">
           <InfoHeader
             class="ml-auto"
             @update-click="update_click"
@@ -36,7 +36,7 @@
           <a-breadcrumb-item>{{ username }}</a-breadcrumb-item>
         </a-breadcrumb>
         <div class="flex">
-          <a-button type="primary" class="mx-4" @click="addEmptyRow">Primary Button</a-button>
+          <a-button type="primary" class="mx-4" @click="addEmptyRow">Add Poll</a-button>
           <a-input-search
             placeholder="Search"
             v-model:value="searchQuery"
@@ -65,7 +65,7 @@ import { getowntopics } from '@/functions/user'
 import { cloneDeep } from 'lodash-es';
 const pollTableRef = ref(null)
 const selectedKeys = ref(['4'])
-const searchQuery = ref('dawdwad')
+const searchQuery = ref('')
 const username = ref('Username')
 const collapsed = ref(false)
 const table = ref(null)

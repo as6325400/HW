@@ -178,3 +178,36 @@ export const getVote = async (topic_id: string, option_id: number, username: str
     throw error // 抛出錯誤，便於外部進一步處理
   }
 }
+
+export const deletegetvote = async (topic_id: string, option_id: number, username: string) => {
+  try {
+    const token = localStorage.getItem('token')
+    const api = import.meta.env.VITE_BACKEND + 'api/vote/deletegetvote'
+    const response = await axios.post(
+      api,
+      {
+        topic_id: topic_id,
+        option_id: option_id,
+        username: username
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+    console.log('Delete Vote:', response.data)
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      // 處理 axios 錯誤
+      console.error('Vote Error:', error.response?.data)
+      return {
+        status: error.response?.status
+      }
+    } else {
+      // 處理非 axios 錯誤
+      console.error('Unexpected Error:', error)
+    }
+    throw error // 抛出錯誤，便於外部進一步處理
+  }
+}

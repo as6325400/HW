@@ -127,14 +127,24 @@ class VoteController extends Controller
     }
 
     public function getvote(Request $request)
-    {
+    {   
+        $token = $request->header('Authorization');
+        if (Str::startsWith($token, 'Bearer ')) {
+            $token = Str::substr($token, 7);
+        }
+        $user = auth()->user();
+        if (!$user) {
+            return response()->json(['error' => 'Unauthorized'], 487);
+        }
         $topic_id = $request->input('topic_id');
         $option_id = $request->input('option_id');
-        $username = $request->input('username');
+        $username =  $user['username'];
         if(DB::table('vote_record')->where('topic_id', $topic_id)->where('username', $username)->exists()){
+            $old_option_id = DB::table('vote_record')->where('topic_id', $topic_id)->where('username', $username)->value('option_id');
             DB::table('vote_record')->where('topic_id', $topic_id)->where('username', $username)->update([
                 'option_id' => $option_id
             ]);
+            DB::table('poll_options')->where('id', $old_option_id)->decrement('vote_count');
             DB::table('poll_options')->where('id', $option_id)->increment('vote_count');
         }
         else{

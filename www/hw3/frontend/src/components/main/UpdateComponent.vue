@@ -13,16 +13,18 @@
           :show-upload-list="false"
           :before-upload="beforeUpload"
           @change="handleChange"
+          :disabled="!showPhoto"  
         >
-          <!-- <div v-if="props.imgpath" class="avatar-wrapper">
+          <div v-if="props.imgpath" class="avatar-wrapper">
             <a-avatar :src="props.imgpath" :size="192" />
-          </div> -->
-          <div class="avatar-uploader-trigger">
+          </div>
+          <div v-else class="avatar-uploader-trigger">
             <a-avatar class="h-full w-full absolute" :size="192">
               <template #icon><UserOutlined /></template>
             </a-avatar>
           </div>
-          <div class="h-full w-full upload-trigger absolute top-0 left-0 z-2 flex justify-center items-center">
+          <div class="h-full w-full upload-trigger absolute top-0 left-0 z-2 flex justify-center items-center"
+          v-show="showPhoto">
             <span>Click to upload</span>
           </div>
         </a-upload>
@@ -34,6 +36,7 @@
             v-model:value="profile.username"
             placeholder="Username"
             autocomplete="new-password"
+            :disabled="true"
           />
         </a-form-item>
         <a-form-item label="Password">
@@ -52,7 +55,7 @@
         <a-form-item label="New Password">
           <a-input
             type="password"
-            v-model="profile.newpassword"
+            v-model:value="profile.newPassword"
             placeholder="New Password"
             autocomplete="new-password"
           />
@@ -60,7 +63,7 @@
         <a-form-item label="Confirm New Password">
           <a-input
             type="password"
-            v-model="profile.confirmNewPassword"
+            v-model:value="profile.confirmNewPassword"
             placeholder="Confirm New Password"
             autocomplete="new-password"
           />
@@ -68,7 +71,7 @@
         <a-form-item label="Current Password">
           <a-input
             type="password"
-            v-model="profile.oldPassword"
+            v-model:value="profile.oldPassword"
             placeholder="Current Password"
             autocomplete="new-password"
           />
@@ -78,10 +81,10 @@
   </a-modal>
 </template>
 <script setup>
-import { ref, reactive, watch } from 'vue'
+import { ref, reactive, watch, onMounted } from 'vue'
 import { UserOutlined } from '@ant-design/icons-vue'
 import { Modal, Form, Input, Upload, Avatar } from 'ant-design-vue'
-import { uploadimg } from '@/functions/user'
+import { uploadimg, updatePassword } from '@/functions/user'
 
 const isModalVisible = ref(false)
 const showPhoto = ref(true)
@@ -92,6 +95,10 @@ const profile = ref({
   oldPassword: '',
   newPassword: '',
   confirmNewPassword: '',
+})
+
+onMounted(() => {
+  console.log(props.imgpath)
 })
 
 const props = defineProps({
@@ -127,19 +134,21 @@ watch(
   }
 )
 
+const emit = defineEmits(['handleOk', 'handleCancel'])
+
 async function handleOk() {
   if (showPhoto.value) {
     if (!profile.value.photo) {
-      console.log('Please upload a photo')
+      alert('Please upload a photo')
       return
     }
     if (!profile.value.username) {
       console.log(profile.value.username)
-      console.log('Please enter a username')
+      alert('Please enter a username')
       return
     }
     if (!profile.value.password) {
-      console.log('Please enter a password')
+      alert('Please enter a password')
       return
     }
     const response = await uploadimg(
@@ -149,6 +158,9 @@ async function handleOk() {
     )
     console.log('Uploading photo...', response)
   } else {
+    console.log('profile.value', profile.value
+
+    )
     if (!profile.value.username) {
       alert('Please enter a username')
       return
@@ -170,9 +182,13 @@ async function handleOk() {
       return
     }
     console.log('Changing password...')
+    const response = await updatePassword(
+      profile.value.username,
+      profile.value.oldPassword,
+      profile.value.newPassword
+    )
   }
-  // console.log('Submitted:', profile.value)
-  isModalVisible.value = false
+  window.location.href = '/home'
 }
 
 function handleCancel() {
@@ -256,5 +272,10 @@ function handleChange({ file }) {
 }
 .avatar-uploader:hover .upload-trigger {
   opacity: 1; /* 悬停时显示 */
+}
+
+.disabled-upload .avatar-uploader-trigger:hover {
+  opacity: 1; /* 當禁用時，hover 不改變透明度 */
+  cursor: not-allowed; /* 可選，顯示禁用狀態 */
 }
 </style>

@@ -32,7 +32,7 @@
 <script setup>
 import { onMounted, ref } from 'vue'
 import InfoHeader from '@/components/main/HeaderComponent.vue'
-import { getVote } from '@/functions/vote'
+import { getVote, deletegetvote } from '@/functions/vote'
 import { number } from 'yup'
 
 const props = defineProps({
@@ -90,6 +90,8 @@ const vote = async (optionId) => {
   if (selected.value === optionId) {
     selected.value = null
     option.votes--
+    const res = await deletegetvote(props.topic_id, optionId, props.username)
+    console.log(res)
     return
   }
   if (selected.value !== null) {
