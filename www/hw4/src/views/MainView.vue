@@ -11,7 +11,6 @@
     <foreignObject x="10" y="10" width="300" height="30" ref="yearSelect" class="hidden">
       <div xmlns="http://www.w3.org/1999/xhtml">
         <select id="county-select" v-model="search_year">
-          <option value="" selected>選擇年份</option>
           <option value="2024" selected>2024</option>
           <option value="2020">2020</option>
           <option value="2016">2016</option>
@@ -61,7 +60,7 @@ const draw = (mapData, electionData) => {
   
   const intensityScale = d3.scaleLinear()
     .domain([20, 25, 30, 35, 40, 45, 50])
-    .range([0.3, 0.5, 0.7, 0.8, 0.9, 1.0, 1.2])
+    .range([0.1, 0.2, 0.4, 0.5, 0.6, 0.8, 1])
 
 
   d3.select('g.counties')

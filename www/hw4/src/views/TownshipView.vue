@@ -75,7 +75,7 @@ const draw = (mapData, electionData) => {
   
   const intensityScale = d3.scaleLinear()
     .domain([20, 25, 30, 35, 40, 45, 50])
-    .range([0.3, 0.5, 0.7, 0.8, 0.9, 1.0, 1.2])
+    .range([0.1, 0.2, 0.4, 0.5, 0.6, 0.8, 1])
 
   // console.log(topojson.feature(mapData, mapData.objects['TOWN_MOI_1080617']).features.filter(d => d.properties.COUNTYNAME === countyName))
   d3.select('g.counties')
