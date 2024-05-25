@@ -13,11 +13,20 @@
         <button @click="goBack" style="background-color: gray; padding: 5px; border-radius: 5px;">返回上一頁</button>
       </div>
     </foreignObject>
+    <foreignObject x="10" y="10" width="300" height="30" ref="yearSelect" class="hidden">
+      <div xmlns="http://www.w3.org/1999/xhtml">
+        <select id="county-select" v-model="search_year">
+          <option value="2024" selected>2024</option>
+          <option value="2020">2020</option>
+          <option value="2016">2016</option>
+        </select>
+      </div>
+    </foreignObject>
   </svg>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import * as d3 from 'd3'
 import * as topojson from 'topojson-client'
 import Chart from 'chart.js/auto'
@@ -31,6 +40,16 @@ const route = useRoute()
 let countyName = ""
 const svgElement = ref(null)
 const backButton = ref(null)
+const yearSelect = ref(null)
+const search_year = ref(2024)
+
+watch(() => search_year.value, async(value) => {
+  d3.select('g.counties').selectAll('path').remove();
+  d3.select('path.county-borders').selectAll('path').remove();
+  const electionData = await getdata(countyName, value)
+  console.log(value)
+  draw(taiwanCountry.value, electionData)
+})
 
 const goBack = () => {
   window.location.href = '/'
@@ -192,5 +211,9 @@ onMounted(async() => {
   backButtonElement.classList.remove('hidden');
   backButtonElement.setAttribute('x', svgWidth / 2 - 50); // 調整 x 坐標，使按鈕居中
   backButtonElement.setAttribute('y', svgHeight - 60); // 調整 y 坐標，使按鈕位於底部
+  const select_year = yearSelect.value;
+  select_year.classList.remove('hidden');
+  select_year.setAttribute('x', svgWidth - 150); // 調整 x 坐標，使按鈕至右
+  select_year.setAttribute('y', 20); // 調整 y 坐標，使按鈕至下
 })
 </script>
