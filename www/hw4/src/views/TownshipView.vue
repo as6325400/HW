@@ -144,6 +144,7 @@ const showChart = (countyData) => {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         x: {
           grid: {

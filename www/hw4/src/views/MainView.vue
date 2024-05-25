@@ -103,7 +103,7 @@ const draw = (mapData, electionData) => {
       if (countyData) {
         showChart(countyData);
       }
-
+      console.log('mouseover')
       d3.select('#chart-container').style('display', 'block');
     })
     .on('mouseout', () => {
@@ -116,7 +116,10 @@ const draw = (mapData, electionData) => {
 }
 
 const showChart = (countyData) => {
-  const ctx = document.getElementById('election-chart').getContext('2d');
+  const chartElement = document.getElementById('election-chart');
+  const ctx = chartElement.getContext('2d');
+
+  // 確認圖表元素的尺寸是固定的
   if (electionChart) {
     electionChart.destroy();
   }
@@ -132,6 +135,7 @@ const showChart = (countyData) => {
     },
     options: {
       responsive: true,
+      maintainAspectRatio: false,
       scales: {
         x: {
           grid: {
