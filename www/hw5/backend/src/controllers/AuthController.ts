@@ -5,7 +5,8 @@ import bcrypt from 'bcryptjs';
 import googleOAuth2Client from '../config/GoogleOauth2Client';
 
 const SCOPES = [
-  'https://mail.google.com/',
+  'https://www.googleapis.com/auth/userinfo.profile',
+  'https://www.googleapis.com/auth/userinfo.email',
 ];
 
 class AuthController {
@@ -89,12 +90,25 @@ class AuthController {
     try {
       const { tokens } = await googleOAuth2Client.getToken(code);
       googleOAuth2Client.setCredentials(tokens);
+      const { data } = await googleOAuth2Client.request({
+        url: 'https://www.googleapis.com/oauth2/v3/userinfo'
+      });
+      console.log(data);
       const session: any = req.session;
-      session.tokens = tokens;
-      res.redirect('/email/user');
+      
     } catch (err) {
       console.error('Error authenticating with Google:', err);
       res.status(500).send('Error authenticating with Google');
+    }
+  }
+  me(req: Request, res: Response, next: NextFunction){
+    const session: any = req.session;
+    if(session.user_id){
+      console.log(session.user_id);
+      res.status(200).send('User logged in');
+    }
+    else{
+      res.status(401).send('User not logged in');
     }
   }
 }

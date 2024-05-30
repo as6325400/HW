@@ -15,6 +15,7 @@ class AuthRoute extends Route{
     this.router.post('/register', this.authController.register);
     this.router.get('/google_login', this.authController.google_login);
     this.router.get('/google/callback', this.authController.google_callback);
+    this.router.get('/me', this.authController.me);
   }
 }
 
