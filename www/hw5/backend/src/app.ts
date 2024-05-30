@@ -2,6 +2,7 @@ import express from 'express';
 import {router} from "./routes/router";
 import session from 'express-session';
 import sessionStore from './models/sessionStore';
+import DB from './models/db';
 
 const app: express.Application = express();
 const port : number = 12312;
@@ -14,7 +15,7 @@ app.use(session({
     resave: false,
     saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 1 // 1 hour
+      maxAge: 1000 * 60 * 60 // 1 hour
     }
 }));
 
