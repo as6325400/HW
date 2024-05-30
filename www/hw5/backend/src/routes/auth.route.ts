@@ -12,6 +12,7 @@ class AuthRoute extends Route{
 
   protected setRoutes() {
     this.router.get('/login', this.authController.echo);
+    this.router.get('/test', this.authController.test);
   }
 }
 
