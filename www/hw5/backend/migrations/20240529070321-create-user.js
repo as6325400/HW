@@ -9,6 +9,9 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      username: {
+        type: Sequelize.STRING
+      },
       email: {
         type: Sequelize.STRING
       },
@@ -16,7 +19,8 @@ module.exports = {
         type: Sequelize.STRING
       },
       google_id: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: null
       },
       login_method: {
         type: Sequelize.INTEGER,
@@ -26,18 +30,22 @@ module.exports = {
         }
       },
       picture: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
+        defaultValue: null
       },
       is_email_verified: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.BOOLEAN,
+        defaultValue: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DATE,
+        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP')
       }
     });
   },

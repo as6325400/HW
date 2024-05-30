@@ -2,10 +2,13 @@ import express from 'express';
 import {router} from "./routes/router";
 import session from 'express-session';
 import sessionStore from './models/sessionStore';
-import DB from './models/db';
+import * as dotenv from 'dotenv';
+
+
+dotenv.config();
 
 const app: express.Application = express();
-const port : number = 12312;
+const port : number = process.env.BACKEND_SERVER_PORT ? parseInt(process.env.BACKEND_SERVER_PORT) : 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -22,6 +25,7 @@ app.use(session({
 // load router
 for (const route of router) {
   app.use(route.getPrefix(), route.getRouter());
+  console.log(`Router loaded: ${route.getPrefix()}`);
 }
 
 app.listen(port, () => {

@@ -11,9 +11,10 @@ class AuthRoute extends Route{
   }
 
   protected setRoutes() {
-    this.router.get('/login', this.authController.echo);
-    this.router.get('/test', this.authController.test);
+    this.router.post('/mail_login', this.authController.mail_login);
     this.router.post('/register', this.authController.register);
+    this.router.get('/google_login', this.authController.google_login);
+    this.router.get('/google/callback', this.authController.google_callback);
   }
 }
 
