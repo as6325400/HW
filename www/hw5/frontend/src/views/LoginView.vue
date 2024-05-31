@@ -14,12 +14,14 @@
         {{ errorMsg }}
       </template>
     </DynamicForm>
+    <GoogleSignInButton></GoogleSignInButton>
   </div>
 </template>
 
 <script setup>
 import { ref } from 'vue'
 import DynamicForm from '@/components/cover/DynamicForm.vue'
+import GoogleSignInButton from '@/components/cover/GoogleSignInButton.vue';
 
 const fields = ref([
   {

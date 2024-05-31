@@ -1,6 +1,5 @@
 <template>
   <div class="whitespace-pre-wrap">
-    <Title></Title>
     <DynamicForm
       :fields="fields"
       buttonText="Register"
@@ -19,6 +18,7 @@
 
 <script setup lang="ts">
 import DynamicForm from '@/components/cover/DynamicForm.vue'
+import {register} from '@/functions/auth'
 import { ref } from 'vue'
 import * as yup from 'yup'
 
@@ -57,10 +57,10 @@ const fields = ref([
   }
 ])
 
-const RegisterHandler = () => {
+const RegisterHandler = async () => {
   errorMsg.value = ''
-  const data = fields.value.reduce((result, field) => {
-    result[field.id] = field.value
+  const data = fields.value.reduce((result : any, field) => {
+    result[field.id] = field.value.trim()
     return result
   }, {})
   errorMsgClass.value = 'text-red-500'
@@ -76,37 +76,38 @@ const RegisterHandler = () => {
     errorMsg.value = 'Passwords do not match'
     return
   }
-  const str = data.password;
-  const hasUpperCase = /[A-Z]/.test(str);
-  const hasLowerCase = /[a-z]/.test(str);
-  const hasNumber = /\d/.test(str);
-  const isLongEnough = str.length >= 6;
+  // const str = data.password;
+  // const hasUpperCase = /[A-Z]/.test(str);
+  // const hasLowerCase = /[a-z]/.test(str);
+  // const hasNumber = /\d/.test(str);
+  // const isLongEnough = str.length >= 6;
 
-  let arr = [0, 0, 0, 0]
-  let errorMsg_arr = [
-    'Password must include an uppercase letter.',
-    'Password must include a lowercase letter.',
-    'Password must include a number.',
-    'Password must be at least 6 characters long.'
-  ];
-  if (!hasUpperCase) {
-    arr[0] = 1
-  }
-  if (!hasLowerCase) {
-    arr[1] = 1
-  }
-  if (!hasNumber) {
-    arr[2] = 1
-  }
-  if (!isLongEnough) {
-    arr[3] = 1
-  }
-  for(let i = 0; i < 4; i++) {
-    if (arr[i] === 1) {
-      errorMsg.value += errorMsg_arr[i] + '\n'
-    }
-  }
-
+  // let arr = [0, 0, 0, 0]
+  // let errorMsg_arr = [
+  //   'Password must include an uppercase letter.',
+  //   'Password must include a lowercase letter.',
+  //   'Password must include a number.',
+  //   'Password must be at least 6 characters long.'
+  // ];
+  // if (!hasUpperCase) {
+  //   arr[0] = 1
+  // }
+  // if (!hasLowerCase) {
+  //   arr[1] = 1
+  // }
+  // if (!hasNumber) {
+  //   arr[2] = 1
+  // }
+  // if (!isLongEnough) {
+  //   arr[3] = 1
+  // }
+  // for(let i = 0; i < 4; i++) {
+  //   if (arr[i] === 1) {
+  //     errorMsg.value += errorMsg_arr[i] + '\n'
+  //   }
+  // }
+  const response = await register(data.username, data.email, data.password);
+  console.log(response)
   if (errorMsg.value !== '') {
     return
   }

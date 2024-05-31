@@ -1,4 +1,5 @@
 import express from 'express';
+import cors from 'cors';
 import {router} from "./routes/router";
 import session from 'express-session';
 import sessionStore from './models/sessionStore';
@@ -9,7 +10,7 @@ dotenv.config();
 
 const app: express.Application = express();
 const port : number = process.env.BACKEND_SERVER_PORT ? parseInt(process.env.BACKEND_SERVER_PORT) : 3000;
-
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(session({
